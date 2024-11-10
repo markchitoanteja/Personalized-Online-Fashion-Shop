@@ -1,8 +1,8 @@
 <?php
 $routes = [
     // Normal Pages
-    '' => '../app/views/auth/login.php',
-    'login' => '../app/views/auth/login.php',
+    '' => '../app/views/pages/home.php',
+    'home' => '../app/views/pages/home.php',
 
     // Server
     'server' => '../app/controllers/Controller.php',

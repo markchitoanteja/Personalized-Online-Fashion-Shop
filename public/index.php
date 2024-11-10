@@ -8,17 +8,17 @@ require_once '../app/models/Model.php';
 
 $uri = trim($_SERVER['REQUEST_URI'], '/');
 
-$excluded_pages = ["403", "404", "500", "server", "login"];
+$excluded_pages = ["403", "404", "500", "server"];
 
 if (array_key_exists($uri, $routes)) {
     $database = new Database();
     $model = new Model();
 
-    $_SESSION["page"] = $uri ?: 'login';
+    session("page", $uri ?: "home");
 
     $pageContent = $routes[$uri];
 
-    if (!in_array($_SESSION["page"], $excluded_pages)) {
+    if (!in_array(session("page"), $excluded_pages)) {
         include_once '../app/views/layouts/base.php';
     } else {
         require_once $pageContent;
