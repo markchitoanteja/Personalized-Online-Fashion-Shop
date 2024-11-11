@@ -38,6 +38,14 @@ jQuery(document).ready(function () {
             icon: "warning"
         });
     })
+    
+    $("#contact_us_form").submit(function () {
+        Swal.fire({
+            title: "Feature Not Available",
+            text: "This function is not yet available. Please check back later.",
+            icon: "warning"
+        });
+    })
 
     $(".logout").click(function () {
         var formData = new FormData();

@@ -3,6 +3,9 @@ $routes = [
     // Normal Pages
     '' => '../app/views/pages/home.php',
     'home' => '../app/views/pages/home.php',
+    'products' => '../app/views/pages/products.php',
+    'about_us' => '../app/views/pages/about_us.php',
+    'contact_us' => '../app/views/pages/contact_us.php',
 
     // Server
     'server' => '../app/controllers/Controller.php',
