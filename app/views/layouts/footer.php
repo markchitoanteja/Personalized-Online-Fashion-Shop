@@ -1,3 +1,6 @@
+    <?php include_once "../app/views/components/login_modal.php" ?>
+    <?php include_once "../app/views/components/register_modal.php" ?>
+    
     <!-- ***** Footer Start ***** -->
     <footer>
         <div class="container">
@@ -78,8 +81,8 @@
     <script src="assets/js/sweetalert2.min.js"></script>
     <script src="assets/js/custom.min.js"></script>
     <script src="assets/js/main.js"></script>
-    </body>
+</body>
 
-    </html>
+</html>
 
-    <?php session("notification", "unset") ?>
+<?php session("notification", "unset") ?>
