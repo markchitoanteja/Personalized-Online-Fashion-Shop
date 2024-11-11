@@ -6,7 +6,7 @@ require_once '../config/database.php';
 require_once '../routes/web.php';
 require_once '../app/models/Model.php';
 
-$uri = trim($_SERVER['REQUEST_URI'], '/');
+$uri = parse_url(trim($_SERVER['REQUEST_URI'], '/'), PHP_URL_PATH);
 
 $excluded_pages = ["403", "404", "500", "server"];
 
