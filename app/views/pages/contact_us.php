@@ -19,7 +19,11 @@
         <div class="row">
             <div class="col-lg-6">
                 <div id="map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.3286187910344!2d121.13907227415258!3d14.750506773390866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397bbe8733338e5%3A0xc845d7b6001522e1!2sColegio%20de%20Montalban!5e0!3m2!1sen!2sph!4v1731312274826!5m2!1sen!2sph" width="100%" height="400px" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    <?php if (is_localhost()): ?>
+                        <img src="assets/images/offline_map.png" style="width: 100%; height: 400px;" alt="Offline Map">
+                    <?php else: ?>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.3286187910344!2d121.13907227415258!3d14.750506773390866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397bbe8733338e5%3A0xc845d7b6001522e1!2sColegio%20de%20Montalban!5e0!3m2!1sen!2sph!4v1731312274826!5m2!1sen!2sph" width="100%" height="400px" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    <?php endif ?>
                 </div>
             </div>
             <div class="col-lg-6">

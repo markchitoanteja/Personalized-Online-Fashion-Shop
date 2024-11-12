@@ -8,11 +8,12 @@ require_once '../app/models/Model.php';
 
 $uri = parse_url(trim($_SERVER['REQUEST_URI'], '/'), PHP_URL_PATH);
 
-$excluded_pages = ["403", "404", "500", "server"];
+$admin_pages = ["admin", "admin/dashboard", "admin/manage_products"];
+$excluded_pages = array_merge(["403", "404", "500", "server"], $admin_pages);
 
 if (array_key_exists($uri, $routes)) {
-    $database = new Database();
-    $model = new Model();
+    new Database();
+    new Model();
 
     session("page", $uri ?: "home");
 
@@ -24,7 +25,5 @@ if (array_key_exists($uri, $routes)) {
         require_once $pageContent;
     }
 } else {
-    http_response_code(404);
-    header("Location: /404");
-    exit();
+    redirect("404", 404);
 }

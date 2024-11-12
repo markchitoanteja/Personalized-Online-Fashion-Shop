@@ -7,6 +7,11 @@ $routes = [
     'about_us' => '../app/views/pages/about_us.php',
     'contact_us' => '../app/views/pages/contact_us.php',
 
+    // Admin Pages
+    'admin' => '../app/views/admin/dashboard.php',
+    'admin/dashboard' => '../app/views/admin/dashboard.php',
+    'admin/manage_products' => '../app/views/admin/manage_products.php',
+
     // Server
     'server' => '../app/controllers/Controller.php',
 

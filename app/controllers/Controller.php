@@ -30,6 +30,7 @@ class Controller
 
             if (password_verify($password, $hash)) {
                 session("user_id", $user_data["id"]);
+                session("user_type", $user_data["user_type"]);
 
                 $notification_message = [
                     "title" => "Success!",
@@ -86,6 +87,46 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
+    private function new_product()
+    {
+        $name = post("name");
+        $category = post("category");
+        $price = post("price");
+        $image = upload("image", "uploads/products");
+
+        if ($image) {
+            $data = [
+                "uuid" => $this->database->generate_uuid(),
+                "name" => $name,
+                "category" => $category,
+                "price" => $price,
+                "image" => $image,
+                "created_at" => date("Y-m-d H:i:s"),
+                "updated_at" => date("Y-m-d H:i:s"),
+            ];
+
+            $this->database->insert("products", $data);
+
+            $notification_message = [
+                "title" => "Success!",
+                "text" => "A new product has been added to the database.",
+                "icon" => "success",
+            ];
+
+            $this->success = true;
+        } else {
+            $notification_message = [
+                "title" => "Oops...",
+                "text" => "There was an error while uploading your image.",
+                "icon" => "error",
+            ];
+        }
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
     private function logout()
     {
         session("user_id", "unset");
@@ -112,9 +153,5 @@ class Controller
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     new Controller();
 } else {
-    http_response_code(500);
-
-    header("location: 500");
-
-    exit();
+    redirect("500", 500);
 }

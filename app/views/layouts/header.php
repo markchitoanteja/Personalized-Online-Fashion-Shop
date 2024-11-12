@@ -5,6 +5,10 @@ $user_data = null;
 
 if (session("user_id")) {
     $user_data = $database->select_one("users", ["id" => session("user_id")]);
+
+    if (session("user_type") == "admin") {
+        redirect("admin/dashboard");
+    }
 }
 ?>
 
@@ -22,14 +26,14 @@ if (session("user_id")) {
     <meta property="og:url" content="https://prototype.personalizedonlinefashion.shop/">
     <meta property="og:title" content="Personalized Online Fashion Shop">
     <meta property="og:description" content="Explore custom fashion recommendations and shop trends tailored just for you at the Personalized Online Fashion Shop.">
-    <meta property="og:image" content="assets/images/logo-light.png">
+    <meta property="og:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://prototype.personalizedonlinefashion.shop/">
     <meta property="twitter:title" content="Personalized Online Fashion Shop">
     <meta property="twitter:description" content="Find your style with curated fashion picks and shop trends designed for you at the Personalized Online Fashion Shop.">
-    <meta property="twitter:image" content="assets/images/logo-light.png">
+    <meta property="twitter:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.png">
 
     <title>Personalized Online Fashion Shop</title>
 
