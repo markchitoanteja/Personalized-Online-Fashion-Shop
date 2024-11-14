@@ -11,6 +11,7 @@ class Model
 
         $this->create_users_table();
         $this->create_products_table();
+        $this->create_orders_table();
         $this->insert_admin_data();
     }
 
@@ -32,14 +33,14 @@ class Model
             die("Error creating users table: " . $this->connection->error);
         }
     }
-    
+
     private function create_products_table()
     {
         $sql = "CREATE TABLE IF NOT EXISTS products (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             uuid CHAR(36) NOT NULL UNIQUE,
             name VARCHAR(100) NOT NULL,
-            category VARCHAR(10) NOT NULL,
+            category VARCHAR(11) NOT NULL,
             price FLOAT(11,2) NOT NULL,
             image VARCHAR(255) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -48,6 +49,25 @@ class Model
 
         if (!$this->connection->query($sql) === TRUE) {
             die("Error creating users table: " . $this->connection->error);
+        }
+    }
+
+    private function create_orders_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS orders (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL UNIQUE,
+            user_id INT UNSIGNED NOT NULL,
+            product_id INT UNSIGNED NOT NULL,
+            quantity INT UNSIGNED NOT NULL,
+            total_price FLOAT(11,2) NOT NULL,
+            status VARCHAR(20) DEFAULT 'pending',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating orders table: " . $this->connection->error);
         }
     }
 

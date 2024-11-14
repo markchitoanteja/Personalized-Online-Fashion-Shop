@@ -138,6 +138,12 @@ if (session("user_id")) {
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="manage_orders" class="nav-link <?= session("page") == "admin/manage_orders" ? "active" : null ?>">
+                                <i class="nav-icon fas fa-clipboard-list"></i>
+                                <p>Manage Orders</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="javascript:void(0)" class="nav-link logout">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>Logout</p>

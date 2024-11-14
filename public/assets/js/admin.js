@@ -74,14 +74,14 @@ jQuery(document).ready(function () {
         $("#new_product_submit").attr("disabled", true);
 
         var formData = new FormData();
-        
+
         formData.append('name', name);
         formData.append('category', category);
         formData.append('price', price);
         formData.append('image', image);
 
         formData.append('action', 'new_product');
-        
+
         $.ajax({
             url: '../server',
             data: formData,
@@ -89,12 +89,18 @@ jQuery(document).ready(function () {
             dataType: 'JSON',
             processData: false,
             contentType: false,
-            success: function(response) {
+            success: function (response) {
                 location.reload();
             },
-            error: function(_, _, error) {
+            error: function (_, _, error) {
                 console.error(error);
             }
         });
+    })
+
+    $(".print_order").click(function () {
+        const order_id = $(this).attr("order_id");
+
+        window.open("print_order?order_id=" + order_id, "_blank");
     })
 })  
