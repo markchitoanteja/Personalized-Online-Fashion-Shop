@@ -1,3 +1,11 @@
+<?php
+$database = new Database();
+
+$mens = $database->select_many("products", ["category" => "men"], "", "id", "DESC");
+$womens = $database->select_many("products", ["category" => "women"], "", "id", "DESC");
+$kids = $database->select_many("products", ["category" => "kids"], "", "id", "DESC");
+?>
+
 <!-- ***** Main Banner Area Start ***** -->
 <div class="main-banner" id="top">
     <div class="container-fluid">
@@ -122,106 +130,31 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="men-item-carousel">
-                    <div class="owl-men-item owl-carousel">
-                        <!-- Item 1 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
+                <?php if ($mens) : ?>
+                    <div class="men-item-carousel">
+                        <div class="owl-men-item owl-carousel">
+                            <?php foreach ($mens as $men): ?>
+                                <div class="item">
+                                    <div class="thumb">
+                                        <div class="hover-content">
+                                            <ul>
+                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <img src="uploads/products/<?= htmlspecialchars($men["image"], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($men["name"], ENT_QUOTES, 'UTF-8') ?>" style="aspect-ratio: 37 / 39; width: 100%; height: auto;">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4 class="text-truncate" title="<?= $men["name"] ?>"><?= $men["name"] ?></h4>
+                                        <span>₱<?= number_format($men["price"], 2) ?></span>
+                                    </div>
                                 </div>
-                                <img src="assets/images/men-01.jpg" alt="Classic Spring Jacket">
-                            </div>
-                            <div class="down-content">
-                                <h4>Classic Spring Jacket</h4>
-                                <span>₱7014.60</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 2 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/men-02.jpg" alt="Air Force 1 X Sneakers">
-                            </div>
-                            <div class="down-content">
-                                <h4>Air Force 1 X Sneakers</h4>
-                                <span>₱5260.95</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 3 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/men-03.jpg" alt="Love Nana ‘20 Hoodie">
-                            </div>
-                            <div class="down-content">
-                                <h4>Love Nana ‘20 Hoodie</h4>
-                                <span>₱8768.25</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 4 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/men-02.jpg" alt="Urban Explorer Coat">
-                            </div>
-                            <div class="down-content">
-                                <h4>Urban Explorer Coat</h4>
-                                <span>₱11691.00</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
+                            <?php endforeach ?>
                         </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <h1 class="text-center text-muted">No Available Data</h1>
+                <?php endif ?>
             </div>
         </div>
     </div>
@@ -243,106 +176,31 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="women-item-carousel">
-                    <div class="owl-women-item owl-carousel">
-                        <!-- Item 1 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
+                <?php if ($womens): ?>
+                    <div class="women-item-carousel">
+                        <div class="owl-women-item owl-carousel">
+                            <?php foreach ($womens as $women): ?>
+                                <div class="item">
+                                    <div class="thumb">
+                                        <div class="hover-content">
+                                            <ul>
+                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <img src="uploads/products/<?= htmlspecialchars($women["image"], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($women["name"], ENT_QUOTES, 'UTF-8') ?>" style="aspect-ratio: 37 / 39; width: 100%; height: auto;">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4 class="text-truncate" title="<?= $women["name"] ?>"><?= $women["name"] ?></h4>
+                                        <span>₱<?= number_format($women["price"], 2) ?></span>
+                                    </div>
                                 </div>
-                                <img src="assets/images/women-01.jpg" alt="Eco Green Jacket">
-                            </div>
-                            <div class="down-content">
-                                <h4>Eco Green Jacket</h4>
-                                <span>₱4968.68</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 2 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/women-02.jpg" alt="Vintage Floral Dress">
-                            </div>
-                            <div class="down-content">
-                                <h4>Vintage Floral Dress</h4>
-                                <span>₱3507.30</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 3 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/women-03.jpg" alt="Spring Blossom Dress">
-                            </div>
-                            <div class="down-content">
-                                <h4>Spring Blossom Dress</h4>
-                                <span>₱7599.15</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 4 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/women-02.jpg" alt="Classic Trench Coat">
-                            </div>
-                            <div class="down-content">
-                                <h4>Classic Trench Coat</h4>
-                                <span>₱10521.90</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
+                            <?php endforeach ?>
                         </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <h1 class="text-center text-muted">No Available Data</h1>
+                <?php endif ?>
             </div>
         </div>
     </div>
@@ -364,106 +222,31 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="kid-item-carousel">
-                    <div class="owl-kid-item owl-carousel">
-                        <!-- Item 1 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
+                <?php if ($kids): ?>
+                    <div class="kid-item-carousel">
+                        <div class="owl-kid-item owl-carousel">
+                            <?php foreach ($kids as $kid): ?>
+                                <div class="item">
+                                    <div class="thumb">
+                                        <div class="hover-content">
+                                            <ul>
+                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <img src="uploads/products/<?= htmlspecialchars($kid["image"], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($kid["name"], ENT_QUOTES, 'UTF-8') ?>" style="aspect-ratio: 37 / 39; width: 100%; height: auto;">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4 class="text-truncate" title="<?= $kid["name"] ?>"><?= $kid["name"] ?></h4>
+                                        <span>₱<?= number_format($kid["price"], 2) ?></span>
+                                    </div>
                                 </div>
-                                <img src="assets/images/kid-01.jpg" alt="Back-to-School Essentials">
-                            </div>
-                            <div class="down-content">
-                                <h4>Back-to-School Essentials</h4>
-                                <span>₱4676.40</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 2 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/kid-02.jpg" alt="Sunny Day Cap">
-                            </div>
-                            <div class="down-content">
-                                <h4>Sunny Day Cap</h4>
-                                <span>₱701.46</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 3 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/kid-03.jpg" alt="Classic Denim Set">
-                            </div>
-                            <div class="down-content">
-                                <h4>Classic Denim Set</h4>
-                                <span>₱1753.65</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Item 4 -->
-                        <div class="item">
-                            <div class="thumb">
-                                <div class="hover-content">
-                                    <ul>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-star"></i></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <img src="assets/images/kid-02.jpg" alt="Springtime Hoodie">
-                            </div>
-                            <div class="down-content">
-                                <h4>Springtime Hoodie</h4>
-                                <span>₱2338.20</span>
-                                <ul class="stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                </ul>
-                            </div>
+                            <?php endforeach ?>
                         </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <h1 class="text-center text-muted">No Available Data</h1>
+                <?php endif ?>
             </div>
         </div>
     </div>

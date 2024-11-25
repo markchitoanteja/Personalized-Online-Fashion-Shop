@@ -127,9 +127,63 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
+    private function new_system_update()
+    {
+        $system_update = post("system_update");
+
+        $data = [
+            "uuid" => $this->database->generate_uuid(),
+            "system_update" => $system_update,
+            "status" => "unread",
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->insert("system_updates", $data);
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "A new system update has been added to the database.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function update_system_updates()
+    {
+        $data = [
+            "status" => "read",
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->update("system_updates", $data, ["status" => "unread"]);
+
+        $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_system_update_data()
+    {
+        $id = post("id");
+
+        $system_update_data = $this->database->select_one("system_updates", ["id" => $id]);
+
+        $this->message = $system_update_data;
+        $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
     private function logout()
     {
         session("user_id", "unset");
+        session("user_type", "unset");
 
         $notification_message = [
             "title" => "Success!",

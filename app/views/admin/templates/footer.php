@@ -1,3 +1,5 @@
+        <?php include_once "../app/views/admin/components/new_system_update_modal.php" ?>
+
         <footer class="main-footer">
             <div class="float-right d-none d-sm-block">
                 <b>Version</b> 1.0.0
@@ -9,6 +11,7 @@
     <script>
         var user_id = "<?= session("user_id") ?>";
         var user_type = "<?= session("user_type") ?>";
+        var page = "<?= session("page") ?>";
         var notification = <?= session("notification") ? json_encode(session("notification")) : json_encode(null) ?>;
     </script>
 

@@ -4,9 +4,7 @@ $database = new Database();
 $user_data = null;
 
 if (session("user_id")) {
-    $user_data = $database->select_one("users", ["id" => session("user_id")]);
-
-    if (session("user_type") != "admin") {
+    if ((session("user_type") != "developer") && (session("user_type") != "admin")) {
         $notification_message = [
             "title" => "Oops...",
             "text" => "You do not have the rights to access this page!",
@@ -16,6 +14,15 @@ if (session("user_id")) {
         session("notification", $notification_message);
 
         redirect("/");
+    } else {
+        $user_data = $database->select_one("users", ["id" => session("user_id")]);
+        $system_updates = $database->select_all("system_updates", "id", "DESC");
+
+        $unread_updates = 0;
+
+        if ($system_updates) {
+            $unread_updates = count($database->select_many("system_updates", ["status" => "unread"]));
+        }
     }
 } else {
     $notification_message = [
@@ -83,11 +90,43 @@ if (session("user_id")) {
             </ul>
 
             <ul class="navbar-nav ml-auto">
+                <?php if (session("user_type") == "admin"): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="far fa-bell"></i>
+                            <?php if ($unread_updates): ?>
+                                <span class="badge badge-danger navbar-badge" id="system_updates_counter"><?= $unread_updates ?></span>
+                            <?php endif ?>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <?php if ($system_updates): ?>
+                                <?php foreach ($system_updates as $system_update): ?>
+                                    <span class="dropdown-item text-truncate system_updates <?= $system_update["status"] == "unread" ? "text-bold" : null ?>">
+                                        <i class="fas fa-info-circle mr-2"></i> <?= $system_update["system_update"] ?>
+                                    </span>
+                                    <div class="dropdown-divider"></div>
+                                <?php endforeach ?>
+                                <a href="system_updates" class="dropdown-item dropdown-footer">See All Updates</a>
+                            <?php else: ?>
+                                <span class="dropdown-item text-center text-muted py-5">
+                                    No Available Updates
+                                </span>
+                            <?php endif ?>
+                        </div>
+                    </li>
+                <?php endif ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="fas fa-cog"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <?php if (session("user_type") == "developer"): ?>
+                            <a href="javascript:void(0)" class="dropdown-item" data-toggle="modal" data-target="#new_system_update_modal">
+                                <i class="fas fa-sync mr-2"></i>
+                                System Updates
+                            </a>
+                            <div class="dropdown-divider"></div>
+                        <?php endif ?>
                         <a href="javascript:void(0)" class="dropdown-item account_settings no-function">
                             <i class="fas fa-user mr-2"></i>
                             Account Settings
@@ -104,7 +143,6 @@ if (session("user_id")) {
                         </a>
                     </div>
                 </li>
-
             </ul>
         </nav>
 
@@ -135,12 +173,6 @@ if (session("user_id")) {
                             <a href="manage_products" class="nav-link <?= session("page") == "admin/manage_products" ? "active" : null ?>">
                                 <i class="nav-icon fas fa-box-open"></i>
                                 <p>Manage Products</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="manage_orders" class="nav-link <?= session("page") == "admin/manage_orders" ? "active" : null ?>">
-                                <i class="nav-icon fas fa-clipboard-list"></i>
-                                <p>Manage Orders</p>
                             </a>
                         </li>
                         <li class="nav-item">

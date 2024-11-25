@@ -12,6 +12,7 @@ class Model
         $this->create_users_table();
         $this->create_products_table();
         $this->create_orders_table();
+        $this->create_system_updates_table();
         $this->insert_admin_data();
     }
 
@@ -24,7 +25,7 @@ class Model
             username VARCHAR(50) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
             image VARCHAR(255) NOT NULL,
-            user_type ENUM('admin', 'customer') NOT NULL,
+            user_type ENUM('developer', 'admin', 'customer') NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";
@@ -39,7 +40,7 @@ class Model
         $sql = "CREATE TABLE IF NOT EXISTS products (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             uuid CHAR(36) NOT NULL UNIQUE,
-            name VARCHAR(100) NOT NULL,
+            name VARCHAR(255) NOT NULL,
             category VARCHAR(11) NOT NULL,
             price FLOAT(11,2) NOT NULL,
             image VARCHAR(255) NOT NULL,
@@ -62,6 +63,22 @@ class Model
             quantity INT UNSIGNED NOT NULL,
             total_price FLOAT(11,2) NOT NULL,
             status VARCHAR(20) DEFAULT 'pending',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating orders table: " . $this->connection->error);
+        }
+    }
+    
+    private function create_system_updates_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS system_updates (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL UNIQUE,
+            system_update TEXT NOT NULL,
+            status ENUM('read', 'unread') NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";

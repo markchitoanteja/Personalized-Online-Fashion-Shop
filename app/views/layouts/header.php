@@ -6,7 +6,7 @@ $user_data = null;
 if (session("user_id")) {
     $user_data = $database->select_one("users", ["id" => session("user_id")]);
 
-    if (session("user_type") == "admin") {
+    if ((session("user_type") == "developer") || (session("user_type") == "admin")) {
         redirect("admin/dashboard");
     }
 }

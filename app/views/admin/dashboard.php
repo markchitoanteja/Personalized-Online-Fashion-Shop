@@ -14,7 +14,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>₱0.00</h3>
@@ -26,23 +26,11 @@
                         <a href="javascript:void(0)" class="small-box-footer no-function">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4">
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3>0</h3>
-                            <p>New Orders</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-shopping-cart"></i>
-                        </div>
-                        <a href="javascript:void(0)" class="small-box-footer no-function">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>0</h3>
-                            <p>Active Customers</p>
+                            <p>Active Users</p>
                         </div>
                         <div class="icon">
                             <i class="fa fa-users"></i>
@@ -50,11 +38,11 @@
                         <a href="javascript:void(0)" class="small-box-footer no-function">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-danger">
+                <div class="col-lg-4">
+                    <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>0</h3>
-                            <p>Inventory Status</p>
+                            <p>Total Items</p>
                         </div>
                         <div class="icon">
                             <i class="fa fa-box-open"></i>

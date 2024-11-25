@@ -5,10 +5,10 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Manage Products</h1>
+                    <h1>System Updates</h1>
                 </div>
                 <div class="col-sm-6">
-                    <button class="btn btn-primary float-right" data-toggle="modal" data-target="#new_product_modal"><i class="fas fa-plus mr-1"></i> New Product</button>
+                    <button class="btn btn-primary float-right" data-toggle="modal" data-target="#new_system_update_modal"><i class="fas fa-plus mr-1"></i> New System Update</button>
                 </div>
             </div>
         </div>
@@ -23,27 +23,24 @@
                             <table class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Category</th>
-                                        <th>Price</th>
-                                        <th class="text-center">Actions</th>
+                                        <th>Date and Time</th>
+                                        <th>System Update</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $database = new Database();
-                                    $products = $database->select_all("products", "id", "DESC");
+                                    $system_updates = $database->select_all("system_updates", "id", "DESC");
                                     ?>
 
-                                    <?php if ($products): ?>
-                                        <?php foreach ($products as $product): ?>
+                                    <?php if ($system_updates): ?>
+                                        <?php foreach ($system_updates as $system_update): ?>
                                             <tr>
-                                                <td><?= $product["name"] ?></td>
-                                                <td><?= $product["category"] ?></td>
-                                                <td>₱ <?= $product["price"] ?></td>
+                                                <td><?= date('F j, Y g:i A', strtotime($system_update["created_at"])) ?></td>
+                                                <td><?= strlen($system_update["system_update"]) > 50 ? substr($system_update["system_update"], 0, 70) . '...' : $system_update["system_update"] ?></td>
                                                 <td class="text-center">
-                                                    <i class="fas fa-pencil-alt text-primary mr-1 no-function" role="button" product_id="<?= $product["id"] ?>"></i>
-                                                    <i class="fas fa-trash-alt text-danger no-function" role="button" product_id="<?= $product["id"] ?>"></i>
+                                                    <i class="fas fa-eye text-primary view_system_update" role="button" system_update_id="<?= $system_update["id"] ?>"></i>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>
@@ -58,6 +55,6 @@
     </section>
 </div>
 
-<?php include_once "../app/views/admin/components/new_product_modal.php" ?>
+<?php include_once "../app/views/admin/components/view_system_update_modal.php" ?>
 
 <?php include_once "../app/views/admin/templates/footer.php" ?>

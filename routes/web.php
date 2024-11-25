@@ -11,9 +11,8 @@ $routes = [
     'admin' => '../app/views/admin/dashboard.php',
     'admin/dashboard' => '../app/views/admin/dashboard.php',
     'admin/manage_products' => '../app/views/admin/manage_products.php',
-    'admin/manage_orders' => '../app/views/admin/manage_orders.php',
-    'admin/print_order' => '../app/views/admin/print_order.php',
-
+    'admin/system_updates' => '../app/views/admin/system_updates.php',
+    
     // Server
     'server' => '../app/controllers/Controller.php',
 
