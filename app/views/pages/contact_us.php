@@ -35,23 +35,24 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <fieldset>
-                                <input name="name" type="text" id="name" placeholder="Your Name" required="">
+                                <input type="text" id="contact_us_name" placeholder="Your Name" required>
                             </fieldset>
                         </div>
                         <div class="col-lg-6">
                             <fieldset>
-                                <input name="email" type="email" id="email" placeholder="Your Email" required="">
+                                <input type="email" id="contact_us_email" placeholder="Your Email" required>
                             </fieldset>
                         </div>
                         <div class="col-lg-12">
                             <fieldset>
-                                <textarea name="message" rows="6" id="message" placeholder="Your Message" required=""></textarea>
+                                <textarea rows="6" id="contact_us_message" placeholder="Your Message" required></textarea>
                             </fieldset>
                         </div>
                         <div class="col-lg-12">
                             <fieldset>
-                                <button type="submit" id="form-submit" class="main-dark-button">
-                                    <i class="fa fa-paper-plane"></i>
+                                <button type="submit" id="contact_us_submit" class="main-dark-button">
+                                    <i class="fa fa-paper-plane" id="paper_plane_icon_2"></i>
+                                    <i class="fa fa-refresh fa-spin icon d-none" id="loading_icon_2"></i>
                                 </button>
                             </fieldset>
                         </div>
@@ -76,18 +77,20 @@
                     <div class="row">
                         <div class="col-lg-5">
                             <fieldset>
-                                <input name="name" type="text" id="name" placeholder="Your Name" required="">
+                                <input type="text" id="subscribe_name" placeholder="Your Name" required>
                             </fieldset>
                         </div>
                         <div class="col-lg-5">
                             <fieldset>
-                                <input name="email" type="email" id="email" placeholder="Your Email Address" required="">
+                                <input type="email" id="subscribe_email" placeholder="Your Email Address" required>
+                                <small class="text-danger d-none" id="error_subscribe_email">This email is already subscribed.</small>
                             </fieldset>
                         </div>
                         <div class="col-lg-2">
                             <fieldset>
-                                <button type="submit" id="form-submit" class="main-dark-button">
-                                    <i class="fa fa-paper-plane"></i>
+                                <button type="submit" id="subscribe_submit" class="main-dark-button">
+                                    <i class="fa fa-paper-plane" id="paper_plane_icon"></i>
+                                    <i class="fa fa-refresh fa-spin icon d-none" id="loading_icon"></i>
                                 </button>
                             </fieldset>
                         </div>
@@ -110,9 +113,7 @@
                             <li>Follow Us:<br>
                                 <span>
                                     <a href="https://www.facebook.com/profile.php?id=100064269721973&sk=about&section=bio" target="_blank" rel="noopener noreferrer">Facebook</a>,
-                                    <a href="https://www.instagram.com/personalizeonlineshop/" target="_blank" rel="noopener noreferrer">Instagram</a>,
-                                    <a href="javascript:void(0)" class="no-function">Twitter</a>,
-                                    <a href="javascript:void(0)" class="no-function">LinkedIn</a>
+                                    <a href="https://www.instagram.com/personalizeonlineshop/" target="_blank" rel="noopener noreferrer">Instagram</a>
                                 </span>
                             </li>
                         </ul>

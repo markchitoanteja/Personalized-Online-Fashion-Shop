@@ -87,8 +87,9 @@ if (session("user_id")) {
                                 <li class="submenu">
                                     <a href="javascript:void(0)"><?= $user_data["name"] ?></a>
                                     <ul>
-                                        <li><a href="javascript:void(0)" class="no-function">Account Settings</a></li>
-                                        <li><a href="javascript:void(0)" class="no-function">Purchase History</a></li>
+                                        <li><a href="javascript:void(0)" class="no-function">Profile</a></li>
+                                        <li><a href="javascript:void(0)" class="no-function">Cart <span class="badge badge-danger badge-pill ml-3">2</span></a></li>
+                                        <li><a href="javascript:void(0)" class="no-function">Orders</a></li>
                                         <li><a href="javascript:void(0)" class="logout">Logout</a></li>
                                     </ul>
                                 </li>

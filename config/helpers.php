@@ -151,19 +151,13 @@ function redirect(string $url, int $statusCode = 302)
 }
 
 /**
- * Handles file uploads by moving the uploaded file to a specific directory
- * and generating a unique filename for the uploaded file.
- *
- * - The function checks for successful file upload.
- * - Generates a unique filename based on the original file extension.
- * - Moves the file to the provided directory path.
- * - Returns the unique filename if the upload is successful.
- * - Returns `false` if the upload fails or there is an error.
+ * Handles file uploads by resizing large images and converting them to WebP format
+ * to improve website loading speed.
  *
  * @param string $file The name of the file input in the $_FILES array.
  * @param string $path The directory path where the file should be uploaded.
- * 
- * @return string|false The unique filename if the upload is successful, or `false` if it fails.
+ *
+ * @return string|false The unique filename of the WebP image if the upload is successful, or `false` if it fails.
  */
 function upload(string $file, string $path)
 {
@@ -171,25 +165,91 @@ function upload(string $file, string $path)
     if (isset($_FILES[$file])) {
         $fileInfo = $_FILES[$file];
 
-        // Check if there was an error during the upload
+        // Check for upload errors
         if ($fileInfo['error'] === UPLOAD_ERR_OK) {
-            $filename = $fileInfo['name']; // Original file name
-            $ext = pathinfo($filename, PATHINFO_EXTENSION); // Get file extension
+            $filename = $fileInfo['name']; // Original filename
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION)); // File extension
 
-            // Generate a unique filename using a timestamp or random string
-            $uniqueName = uniqid('file_', true) . '.' . $ext;
+            // Allowed image file types
+            $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
 
-            // Define the upload directory path
+            if (!in_array($ext, $allowedTypes)) {
+                return false; // Invalid file type
+            }
+
+            // Generate a unique filename for the WebP image
+            $uniqueName = uniqid('file_', true) . '.webp';
             $uploadPath = rtrim($path, '/') . '/' . $uniqueName;
 
-            // Move the uploaded file to the destination folder
-            if (move_uploaded_file($fileInfo['tmp_name'], $uploadPath)) {
-                // Return the unique image name
-                return $uniqueName;
+            // Get original image dimensions
+            list($originalWidth, $originalHeight) = getimagesize($fileInfo['tmp_name']);
+
+            // Load the uploaded image into memory
+            switch ($ext) {
+                case 'jpg':
+                case 'jpeg':
+                    $sourceImage = imagecreatefromjpeg($fileInfo['tmp_name']);
+                    break;
+                case 'png':
+                    $sourceImage = imagecreatefrompng($fileInfo['tmp_name']);
+                    break;
+                case 'gif':
+                    $sourceImage = imagecreatefromgif($fileInfo['tmp_name']);
+                    break;
+                default:
+                    return false; // Unsupported format
             }
+
+            if (!$sourceImage) {
+                return false; // Failed to create image resource
+            }
+
+            // Set maximum dimensions (adjust as needed)
+            $maxWidth = 1200; // Maximum width
+            $maxHeight = 1200; // Maximum height
+
+            // Calculate new dimensions while maintaining aspect ratio
+            $resizeRatio = min($maxWidth / $originalWidth, $maxHeight / $originalHeight, 1);
+            $newWidth = (int)($originalWidth * $resizeRatio);
+            $newHeight = (int)($originalHeight * $resizeRatio);
+
+            // Create a new blank image with the desired dimensions
+            $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+
+            // Preserve transparency for PNG and GIF
+            if ($ext === 'png' || $ext === 'gif') {
+                imagealphablending($resizedImage, false);
+                imagesavealpha($resizedImage, true);
+            }
+
+            // Copy and resize the original image into the new image
+            imagecopyresampled(
+                $resizedImage,
+                $sourceImage,
+                0,
+                0,
+                0,
+                0,
+                $newWidth,
+                $newHeight,
+                $originalWidth,
+                $originalHeight
+            );
+
+            // Convert the resized image to WebP format and save it
+            if (imagewebp($resizedImage, $uploadPath, 80)) { // 80 is the quality (adjust as needed)
+                // Free memory
+                imagedestroy($sourceImage);
+                imagedestroy($resizedImage);
+
+                return $uniqueName; // Return the WebP filename
+            }
+
+            // Free memory in case of failure
+            imagedestroy($sourceImage);
+            imagedestroy($resizedImage);
         }
     }
 
-    // Return false if upload fails
-    return false;
+    return false; // Return false if upload fails
 }

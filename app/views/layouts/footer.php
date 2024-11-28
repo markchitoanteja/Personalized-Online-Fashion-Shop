@@ -1,6 +1,6 @@
     <?php include_once "../app/views/components/login_modal.php" ?>
     <?php include_once "../app/views/components/register_modal.php" ?>
-    
+
     <!-- ***** Footer Start ***** -->
     <footer>
         <div class="container">
@@ -20,9 +20,9 @@
                 <div class="col-lg-3">
                     <h4>Shopping &amp; Categories</h4>
                     <ul>
-                        <li><a href="#men">Men's Collection</a></li>
-                        <li><a href="#women">Women's Collection</a></li>
-                        <li><a href="#kids">Kids' Collection</a></li>
+                        <li><a href="<?= session("page") == "home" ? "#men" : "/#men" ?>">Men's Collection</a></li>
+                        <li><a href="<?= session("page") == "home" ? "#women" : "/#women" ?>">Women's Collection</a></li>
+                        <li><a href="<?= session("page") == "home" ? "#kids" : "/#kids" ?>">Kids' Collection</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3">
@@ -48,9 +48,7 @@
                         <p>&copy; 2024 Personalized Online Shop | All Rights Reserved.</p>
                         <ul>
                             <li><a href="https://www.facebook.com/profile.php?id=100064269721973&sk=about&section=bio" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="https://www.instagram.com/personalizeonlineshop/"><i class="fa fa-instagram" target="_blank" rel="noopener noreferrer"></i></a></li>
-                            <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-linkedin"></i></a></li>
+                            <li><a href="https://www.instagram.com/personalizeonlineshop/" target="_blank" rel="noopener noreferrer"><i class="fa fa-instagram"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -81,8 +79,8 @@
     <script src="assets/js/sweetalert2.min.js"></script>
     <script src="assets/js/custom.min.js"></script>
     <script src="assets/js/main.js"></script>
-</body>
+    </body>
 
-</html>
+    </html>
 
-<?php session("notification", "unset") ?>
+    <?php session("notification", "unset") ?>

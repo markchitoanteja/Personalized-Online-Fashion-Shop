@@ -49,39 +49,90 @@ class Controller
 
     private function register()
     {
-        $name = post("name");
+        $first_name = post("first_name");
+        $middle_name = post("middle_name");
+        $last_name = post("last_name");
+        $birthday = post("birthday");
+        $email = post("email");
+        $mobile_number = post("mobile_number");
+        $address = post("address");
         $username = post("username");
         $password = post("password");
 
-        $user_data = $this->database->select_one("users", ["username" => $username]);
+        $this->message = [
+            "is_error_email" => false,
+            "is_error_username" => false,
+        ];
 
-        if (!$user_data) {
-            $data = [
-                "uuid" => $this->database->generate_uuid(),
-                "name" => $name,
-                "username" => $username,
-                "password" => password_hash($password, PASSWORD_BCRYPT),
-                "image" => "default-user-image.png",
-                "user_type" => "customer",
-                "created_at" => date("Y-m-d H:i:s"),
-                "updated_at" => date("Y-m-d H:i:s"),
-            ];
+        $is_error = false;
 
-            $this->database->insert("users", $data);
+        if ($this->database->select_one("customers", ["email" => $email])) {
+            $this->message["is_error_email"] = true;
 
-            session("user_id", $this->database->get_last_insert_id());
+            $is_error = true;
+        }
 
-            $notification_message = [
-                "title" => "Success!",
-                "text" => "Your account has been created successfully.",
-                "icon" => "success",
-            ];
+        if ($this->database->select_one("users", ["username" => $username])) {
+            $this->message["is_error_username"] = true;
+
+            $is_error = true;
+        }
+
+        if (!$is_error) {
+            $image = upload("image", "uploads/users");
+
+            if ($image) {
+                $name = $first_name . ' ' . ($middle_name ? strtoupper(substr($middle_name, 0, 1)) . '. ' : '') . $last_name;
+
+                $user_data = [
+                    "uuid" => $this->database->generate_uuid(),
+                    "name" => $name,
+                    "username" => $username,
+                    "password" => password_hash($password, PASSWORD_BCRYPT),
+                    "image" => $image,
+                    "user_type" => "customer",
+                    "created_at" => date("Y-m-d H:i:s"),
+                    "updated_at" => date("Y-m-d H:i:s"),
+                ];
+
+                $this->database->insert("users", $user_data);
+
+                $user_id = $this->database->get_last_insert_id();
+
+                $customer_data = [
+                    "uuid" => $this->database->generate_uuid(),
+                    "user_id" => $user_id,
+                    "first_name" => $first_name,
+                    "middle_name" => $middle_name,
+                    "last_name" => $last_name,
+                    "birthday" => $birthday,
+                    "email" => $email,
+                    "mobile_number" => $mobile_number,
+                    "address" => $address,
+                    "created_at" => date("Y-m-d H:i:s"),
+                    "updated_at" => date("Y-m-d H:i:s"),
+                ];
+
+                $this->database->insert("customers", $customer_data);
+
+                session("user_id", $user_id);
+
+                $notification_message = [
+                    "title" => "Success!",
+                    "text" => "Your account has been created successfully.",
+                    "icon" => "success",
+                ];
+            } else {
+                $notification_message = [
+                    "title" => "Oops...",
+                    "text" => "There was an error while uploading your image.",
+                    "icon" => "error",
+                ];
+            }
 
             session("notification", $notification_message);
 
             $this->success = true;
-        } else {
-            $this->message = "Username is already taken!";
         }
 
         $this->response($this->success, $this->message);
@@ -176,6 +227,64 @@ class Controller
 
         $this->message = $system_update_data;
         $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function subscribe()
+    {
+        $name = post("name");
+        $email = post("email");
+
+        $data = [
+            "uuid" => $this->database->generate_uuid(),
+            "name" => $name,
+            "email" => $email,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        if ($this->database->insert("newsletter_contacts", $data)) {
+            $notification_message = [
+                "title" => "Success!",
+                "text" => "Thank you for subscribing to our mailing list.",
+                "icon" => "success",
+            ];
+
+            $this->success = true;
+
+            session("notification", $notification_message);
+        }
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function contact_us()
+    {
+        $name = post("name");
+        $email = post("email");
+        $message = post("message");
+
+        $data = [
+            "uuid" => $this->database->generate_uuid(),
+            "name" => $name,
+            "email" => $email,
+            "message" => $message,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        if ($this->database->insert("contact_messages", $data)) {
+            $notification_message = [
+                "title" => "Success!",
+                "text" => "Thank you for reaching out. We will get back to you soon.",
+                "icon" => "success",
+            ];
+
+            $this->success = true;
+
+            session("notification", $notification_message);
+        }
 
         $this->response($this->success, $this->message);
     }

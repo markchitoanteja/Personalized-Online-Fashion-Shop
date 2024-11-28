@@ -10,9 +10,12 @@ class Model
         $this->connection = $this->database->connect();
 
         $this->create_users_table();
+        $this->create_customers_table();
         $this->create_products_table();
         $this->create_orders_table();
         $this->create_system_updates_table();
+        $this->create_newsletter_contacts_table();
+        $this->create_contact_messages_table();
         $this->insert_admin_data();
     }
 
@@ -26,6 +29,28 @@ class Model
             password VARCHAR(255) NOT NULL,
             image VARCHAR(255) NOT NULL,
             user_type ENUM('developer', 'admin', 'customer') NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating users table: " . $this->connection->error);
+        }
+    }
+
+    private function create_customers_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS customers (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL UNIQUE,
+            user_id INT NOT NULL UNIQUE,
+            first_name VARCHAR(30) NOT NULL,
+            middle_name VARCHAR(30) NOT NULL,
+            last_name VARCHAR(30) NOT NULL,
+            birthday VARCHAR(10) NOT NULL,
+            email VARCHAR(30) NOT NULL UNIQUE,
+            mobile_number VARCHAR(11) NOT NULL,
+            address TEXT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";
@@ -79,6 +104,39 @@ class Model
             uuid CHAR(36) NOT NULL UNIQUE,
             system_update TEXT NOT NULL,
             status ENUM('read', 'unread') NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating orders table: " . $this->connection->error);
+        }
+    }
+    
+    private function create_newsletter_contacts_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS newsletter_contacts (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL UNIQUE,
+            name VARCHAR (100) NOT NULL,
+            email VARCHAR (100) NOT NULL UNIQUE,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating orders table: " . $this->connection->error);
+        }
+    }
+    
+    private function create_contact_messages_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS contact_messages (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL UNIQUE,
+            name VARCHAR (100) NOT NULL,
+            email VARCHAR (100) NOT NULL,
+            message TEXT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";
