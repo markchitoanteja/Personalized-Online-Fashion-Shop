@@ -138,6 +138,95 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
+    private function update_profile()
+    {
+        $first_name = post("first_name");
+        $middle_name = post("middle_name");
+        $last_name = post("last_name");
+        $birthday = post("birthday");
+        $email = post("email");
+        $mobile_number = post("mobile_number");
+        $address = post("address");
+        $username = post("username");
+        $password = post("password");
+
+        $user_id = post("user_id");
+        $old_email = post("old_email");
+        $old_username = post("old_username");
+        $old_password = post("old_password");
+        $old_image = post("old_image");
+
+        $this->message = [
+            "is_error_email" => false,
+            "is_error_username" => false,
+        ];
+
+        $is_error = false;
+
+        if (($email != $old_email) && ($this->database->select_one("customers", ["email" => $email]))) {
+            $this->message["is_error_email"] = true;
+
+            $is_error = true;
+        }
+
+        if (($username != $old_username) && ($this->database->select_one("users", ["username" => $username]))) {
+            $this->message["is_error_username"] = true;
+
+            $is_error = true;
+        }
+
+        if (!$is_error) {
+            $image = file_data("image") ? upload("image", "uploads/users") : $old_image;
+
+            if ($image) {
+                $name = $first_name . ' ' . ($middle_name ? strtoupper(substr($middle_name, 0, 1)) . '. ' : '') . $last_name;
+
+                $password = $password ? password_hash($password, PASSWORD_BCRYPT) : $old_password;
+
+                $user_data = [
+                    "name" => $name,
+                    "username" => $username,
+                    "password" => $password,
+                    "image" => $image,
+                    "updated_at" => date("Y-m-d H:i:s"),
+                ];
+
+                $this->database->update("users", $user_data, ["id" => $user_id]);
+
+                $customer_data = [
+                    "first_name" => $first_name,
+                    "middle_name" => $middle_name,
+                    "last_name" => $last_name,
+                    "birthday" => $birthday,
+                    "email" => $email,
+                    "mobile_number" => $mobile_number,
+                    "address" => $address,
+                    "updated_at" => date("Y-m-d H:i:s"),
+                ];
+
+                $this->database->update("customers", $customer_data, ["user_id" => $user_id]);
+
+                $notification_message = [
+                    "title" => "Success!",
+                    "text" => "Your account has been updated successfully.",
+                    "icon" => "success",
+                ];
+            } else {
+                $notification_message = [
+                    "title" => "Oops...",
+                    "text" => "There was an error while uploading your image.",
+                    "icon" => "error",
+                ];
+            }
+
+            session("notification", $notification_message);
+
+            $this->success = true;
+        }
+
+        $this->response($this->success, $this->message);
+    }
+
     private function new_product()
     {
         $name = post("name");
@@ -205,14 +294,25 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
-    private function update_system_updates()
+    private function update_system_update()
     {
+        $id = post("id");
+
         $data = [
             "status" => "read",
             "updated_at" => date("Y-m-d H:i:s"),
         ];
 
-        $this->database->update("system_updates", $data, ["status" => "unread"]);
+        $this->database->update("system_updates", $data, ["id" => $id, "status" => "unread"], "AND");
+
+        $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function update_system_updates()
+    {
+        session("unread_updates_viewed", true);
 
         $this->success = true;
 
@@ -285,6 +385,30 @@ class Controller
 
             session("notification", $notification_message);
         }
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_profile_data()
+    {
+        $id = post("id");
+
+        $profile_data = $this->database->select_one("users", ["users.id" => $id], "AND", [["table" => "customers", "on" => "users.id = customers.user_id"]]);
+
+        $this->success = true;
+        $this->message = $profile_data;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_product_data()
+    {
+        $id = post("id");
+
+        $product_data = $this->database->select_one("products", ["id" => $id]);
+
+        $this->success = true;
+        $this->message = $product_data;
 
         $this->response($this->success, $this->message);
     }

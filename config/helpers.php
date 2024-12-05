@@ -171,7 +171,7 @@ function upload(string $file, string $path)
             $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION)); // File extension
 
             // Allowed image file types
-            $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+            $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
             if (!in_array($ext, $allowedTypes)) {
                 return false; // Invalid file type
@@ -196,6 +196,9 @@ function upload(string $file, string $path)
                 case 'gif':
                     $sourceImage = imagecreatefromgif($fileInfo['tmp_name']);
                     break;
+                case 'webp':
+                    $sourceImage = imagecreatefromwebp($fileInfo['tmp_name']);
+                    break;
                 default:
                     return false; // Unsupported format
             }
@@ -216,8 +219,8 @@ function upload(string $file, string $path)
             // Create a new blank image with the desired dimensions
             $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
 
-            // Preserve transparency for PNG and GIF
-            if ($ext === 'png' || $ext === 'gif') {
+            // Preserve transparency for PNG, GIF, and WebP
+            if (in_array($ext, ['png', 'gif', 'webp'])) {
                 imagealphablending($resizedImage, false);
                 imagesavealpha($resizedImage, true);
             }

@@ -23,6 +23,15 @@ if (session("user_id")) {
         if ($system_updates) {
             $unread_updates = count($database->select_many("system_updates", ["status" => "unread"]));
         }
+
+        $branch = 'main';
+        $commitCount = (int) trim(shell_exec("git rev-list --count $branch"));
+
+        $major = 1 + (int) floor(($commitCount - 1) / 100);
+        $minor = (int) floor((($commitCount - 1) % 100) / 10);
+        $patch = ($commitCount - 1) % 10;
+
+        $version = "$major.$minor.$patch";
     }
 } else {
     $notification_message = [
@@ -51,14 +60,14 @@ if (session("user_id")) {
     <meta property="og:url" content="https://prototype.personalizedonlinefashion.shop/">
     <meta property="og:title" content="Personalized Online Fashion Shop">
     <meta property="og:description" content="Explore custom fashion recommendations and shop trends tailored just for you at the Personalized Online Fashion Shop.">
-    <meta property="og:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.png">
+    <meta property="og:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://prototype.personalizedonlinefashion.shop/">
     <meta property="twitter:title" content="Personalized Online Fashion Shop">
     <meta property="twitter:description" content="Find your style with curated fashion picks and shop trends designed for you at the Personalized Online Fashion Shop.">
-    <meta property="twitter:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.png">
+    <meta property="twitter:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.webp">
 
     <title>Personalized Online Fashion Shop</title>
 
@@ -77,7 +86,7 @@ if (session("user_id")) {
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake img-circle" src="../assets/images/logo-light.png" alt="AdminLTELogo" height="60" width="60">
+            <img class="animation__shake img-circle" src="../assets/images/logo-light.webp" alt="AdminLTELogo" height="60" width="60">
 
             <h4 class="mt-3 text-muted">Personalized Online Fashion Shop</h4>
         </div>
@@ -94,14 +103,14 @@ if (session("user_id")) {
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)">
                             <i class="far fa-bell"></i>
-                            <?php if ($unread_updates): ?>
+                            <?php if ((!session("unread_updates_viewed") || session("unread_updates_viewed") == false) && $unread_updates): ?>
                                 <span class="badge badge-danger navbar-badge" id="system_updates_counter"><?= $unread_updates ?></span>
                             <?php endif ?>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <?php if ($system_updates): ?>
                                 <?php foreach ($system_updates as $system_update): ?>
-                                    <span class="dropdown-item text-truncate system_updates <?= $system_update["status"] == "unread" ? "text-bold" : null ?>">
+                                    <span system_update_id="<?= $system_update["id"] ?>" class="dropdown-item text-truncate view_system_update <?= $system_update["status"] == "unread" ? "text-bold" : null ?>" role="button">
                                         <i class="fas fa-info-circle mr-2"></i> <?= $system_update["system_update"] ?>
                                     </span>
                                     <div class="dropdown-divider"></div>
@@ -148,7 +157,7 @@ if (session("user_id")) {
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="/" class="brand-link">
-                <img src="../assets/images/logo-light.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8; width: 33px; height: 33px;">
+                <img src="../assets/images/logo-light.webp" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8; width: 33px; height: 33px;">
                 <span class="brand-text font-weight-light">Personalized OFS</span>
             </a>
             <div class="sidebar">

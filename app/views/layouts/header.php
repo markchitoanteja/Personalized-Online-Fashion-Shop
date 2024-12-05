@@ -26,14 +26,14 @@ if (session("user_id")) {
     <meta property="og:url" content="https://prototype.personalizedonlinefashion.shop/">
     <meta property="og:title" content="Personalized Online Fashion Shop">
     <meta property="og:description" content="Explore custom fashion recommendations and shop trends tailored just for you at the Personalized Online Fashion Shop.">
-    <meta property="og:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.png">
+    <meta property="og:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://prototype.personalizedonlinefashion.shop/">
     <meta property="twitter:title" content="Personalized Online Fashion Shop">
     <meta property="twitter:description" content="Find your style with curated fashion picks and shop trends designed for you at the Personalized Online Fashion Shop.">
-    <meta property="twitter:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.png">
+    <meta property="twitter:image" content="https://prototype.personalizedonlinefashion.shop/assets/images/logo-light.webp">
 
     <title>Personalized Online Fashion Shop</title>
 
@@ -69,9 +69,9 @@ if (session("user_id")) {
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a href="/" class="logo">
-                            <img src="assets/images/logo-bg-light.png" class="d-md-inline d-none">
+                            <img src="assets/images/logo-bg-light.webp" class="d-md-inline d-none">
                             <div class="d-md-none d-inline">
-                                <img src="assets/images/logo-light.png" class="d-inline" style="height: 59px; vertical-align: middle;">
+                                <img src="assets/images/logo-light.webp" class="d-inline" style="height: 59px; vertical-align: middle;">
                                 <h5 class="text-dark d-inline" style="margin-left: 8px; vertical-align: middle;"><b>POF Shop</b></h5>
                             </div>
                         </a>
@@ -87,7 +87,7 @@ if (session("user_id")) {
                                 <li class="submenu">
                                     <a href="javascript:void(0)"><?= $user_data["name"] ?></a>
                                     <ul>
-                                        <li><a href="javascript:void(0)" class="no-function">Profile</a></li>
+                                        <li><a href="javascript:void(0)" class="profile">Profile</a></li>
                                         <li><a href="javascript:void(0)" class="no-function">Cart <span class="badge badge-danger badge-pill ml-3">2</span></a></li>
                                         <li><a href="javascript:void(0)" class="no-function">Orders</a></li>
                                         <li><a href="javascript:void(0)" class="logout">Logout</a></li>

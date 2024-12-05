@@ -20,7 +20,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                 <a href="products">Discover More</a>
                             </div>
                         </div>
-                        <img src="assets/images/left-banner-image.jpg" alt="">
+                        <img src="assets/images/left-banner-image.webp" alt="">
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                             </div>
                                         </div>
                                     </div>
-                                    <img src="assets/images/baner-right-image-02.jpg">
+                                    <img src="assets/images/baner-right-image-02.webp">
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                             </div>
                                         </div>
                                     </div>
-                                    <img src="assets/images/baner-right-image-01.jpg">
+                                    <img src="assets/images/baner-right-image-01.webp">
                                 </div>
                             </div>
                         </div>
@@ -83,7 +83,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                             </div>
                                         </div>
                                     </div>
-                                    <img src="assets/images/baner-right-image-03.jpg">
+                                    <img src="assets/images/baner-right-image-03.webp">
                                 </div>
                             </div>
                         </div>
@@ -103,7 +103,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                             </div>
                                         </div>
                                     </div>
-                                    <img src="assets/images/baner-right-image-04.jpg">
+                                    <img src="assets/images/baner-right-image-04.webp">
                                 </div>
                             </div>
                         </div>
@@ -138,7 +138,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                     <div class="thumb">
                                         <div class="hover-content">
                                             <ul>
-                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="view_product" product_id="<?= $men["id"] ?>"><i class="fa fa-eye"></i></a></li>
                                                 <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
                                             </ul>
                                         </div>
@@ -283,12 +283,12 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                         </div>
                         <div class="col-lg-6">
                             <div class="first-image">
-                                <img src="assets/images/explore-image-01.jpg" alt="Collection of Leather Bags">
+                                <img src="assets/images/explore-image-01.webp" alt="Collection of Leather Bags">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="second-image">
-                                <img src="assets/images/explore-image-02.jpg" alt="Various Types of Apparel">
+                                <img src="assets/images/explore-image-02.webp" alt="Various Types of Apparel">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -327,7 +327,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                             <i class="fa fa-instagram"></i>
                         </a>
                     </div>
-                    <img src="assets/images/instagram-01.jpg" alt="">
+                    <img src="assets/images/instagram-01.webp" alt="">
                 </div>
             </div>
             <div class="col-2">
@@ -338,7 +338,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                             <i class="fa fa-instagram"></i>
                         </a>
                     </div>
-                    <img src="assets/images/instagram-02.jpg" alt="">
+                    <img src="assets/images/instagram-02.webp" alt="">
                 </div>
             </div>
             <div class="col-2">
@@ -349,7 +349,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                             <i class="fa fa-instagram"></i>
                         </a>
                     </div>
-                    <img src="assets/images/instagram-03.jpg" alt="">
+                    <img src="assets/images/instagram-03.webp" alt="">
                 </div>
             </div>
             <div class="col-2">
@@ -360,7 +360,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                             <i class="fa fa-instagram"></i>
                         </a>
                     </div>
-                    <img src="assets/images/instagram-04.jpg" alt="">
+                    <img src="assets/images/instagram-04.webp" alt="">
                 </div>
             </div>
             <div class="col-2">
@@ -371,7 +371,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                             <i class="fa fa-instagram"></i>
                         </a>
                     </div>
-                    <img src="assets/images/instagram-05.jpg" alt="">
+                    <img src="assets/images/instagram-05.webp" alt="">
                 </div>
             </div>
             <div class="col-2">
@@ -382,7 +382,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                             <i class="fa fa-instagram"></i>
                         </a>
                     </div>
-                    <img src="assets/images/instagram-06.jpg" alt="">
+                    <img src="assets/images/instagram-06.webp" alt="">
                 </div>
             </div>
         </div>
@@ -450,3 +450,5 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
     </div>
 </div>
 <!-- ***** Subscribe Area Ends ***** -->
+
+<?php include_once "../app/views/components/product_details_modal.php" ?>

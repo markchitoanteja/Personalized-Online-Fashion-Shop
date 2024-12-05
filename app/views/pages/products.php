@@ -48,7 +48,7 @@ $data = $database->query($sql, [$records_per_page, $offset]);
                             <div class="thumb">
                                 <div class="hover-content">
                                     <ul>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-eye"></i></a></li>
+                                        <li><a href="javascript:void(0)" class="view_product" product_id="<?= $row["id"] ?>"><i class="fa fa-eye"></i></a></li>
                                         <li><a href="javascript:void(0)"><i class="fa fa-shopping-cart"></i></a></li>
                                     </ul>
                                 </div>
@@ -99,3 +99,5 @@ $data = $database->query($sql, [$records_per_page, $offset]);
     </div>
 </section>
 <!-- ***** Products Area Ends ***** -->
+
+<?php include_once "../app/views/components/product_details_modal.php" ?>

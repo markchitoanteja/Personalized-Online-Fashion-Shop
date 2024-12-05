@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="left-image">
-                    <img src="assets/images/about-left-image.jpg" alt="About Us - Personalized Online Fashion Shop">
+                    <img src="assets/images/about-left-image.webp" alt="About Us - Personalized Online Fashion Shop">
                 </div>
             </div>
             <div class="col-lg-6">
@@ -66,7 +66,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <img src="assets/images/team_member_1.jpg" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
+                        <img src="assets/images/team_member_1.webp" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
                     </div>
                     <div class="down-content">
                         <h4>TUNGOL, KATHERINE</h4>
@@ -80,15 +80,16 @@
                         <div class="hover-effect">
                             <div class="inner-content">
                                 <ul>
-                                    <li><a href="https://www.facebook.com/namyayadna" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="https://www.facebook.com/erianie.opima?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="https://www.instagram.com/yhanie_opima/profilecard/?igsh=OTdyOGdxcThrYTlq&fbclid=IwZXh0bgNhZW0CMTAAAR2w2_oyqPmqE43iMrIADRnSDtbnzZt5hibUIPzmjBZedQOldf7KZW3A5JE_aem_Ya-ll5lN34HtdgZACE5aOA" target="_blank" rel="noopener noreferrer"><i class="fa fa-instagram"></i></a></li>
                                 </ul>
                             </div>
                         </div>
-                        <img src="assets/images/team_member_5.jpg" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
+                        <img src="assets/images/team_member_2.webp" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
                     </div>
                     <div class="down-content">
-                        <h4>BALDADO, NORIANAMY</h4>
-                        <span>Interaction Experience Designer</span>
+                        <h4>OPIMA, ERIANNIE JEAN</h4>
+                        <span>Digital Engagement Strategist</span>
                     </div>
                 </div>
             </div>
@@ -98,14 +99,48 @@
                         <div class="hover-effect">
                             <div class="inner-content">
                                 <ul>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-facebook"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-twitter"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-linkedin"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-instagram"></i></a></li>
+                                    <li><a href="https://www.facebook.com/Erorujon" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="https://www.linkedin.com/in/valencia-errol-john-388429314/" target="_blank" rel="noopener noreferrer"><i class="fa fa-linkedin"></i></a></li>
                                 </ul>
                             </div>
                         </div>
-                        <img src="assets/images/team_member_3.jpg" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
+                        <img src="assets/images/team_member_4.webp" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
+                    </div>
+                    <div class="down-content">
+                        <h4>VALENCIA, ERROL JOHN</h4>
+                        <span>QA Specialist (Quality Assurance)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="team-item">
+                    <div class="thumb">
+                        <div class="hover-effect">
+                            <div class="inner-content">
+                                <ul>
+                                    <li><a href="https://www.facebook.com/namyayadna" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <img src="assets/images/team_member_5.webp" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
+                    </div>
+                    <div class="down-content">
+                        <h4>BALDADO, NORIANAMY</h4>
+                        <span>Interaction Experience Designer</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="team-item">
+                    <div class="thumb">
+                        <div class="hover-effect">
+                            <div class="inner-content">
+                                <ul>
+                                    <li><a href="https://www.facebook.com/Erica.Mamanao17?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <img src="assets/images/team_member_3.webp" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
                     </div>
                     <div class="down-content">
                         <h4>MAMANAO, ERICA</h4>
@@ -123,51 +158,11 @@
                                 </ul>
                             </div>
                         </div>
-                        <img src="assets/images/team_member_6.jpg" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
+                        <img src="assets/images/team_member_6.webp" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
                     </div>
                     <div class="down-content">
                         <h4>SAN ANTONIO, MARCROBERT</h4>
                         <span>User Insight Specialist</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="team-item">
-                    <div class="thumb">
-                        <div class="hover-effect">
-                            <div class="inner-content">
-                                <ul>
-                                    <li><a href="https://www.facebook.com/erianie.opima?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a></li>
-                                    <li><a href="https://www.instagram.com/yhanie_opima/profilecard/?igsh=OTdyOGdxcThrYTlq&fbclid=IwZXh0bgNhZW0CMTAAAR2w2_oyqPmqE43iMrIADRnSDtbnzZt5hibUIPzmjBZedQOldf7KZW3A5JE_aem_Ya-ll5lN34HtdgZACE5aOA" target="_blank" rel="noopener noreferrer"><i class="fa fa-instagram"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <img src="assets/images/team_member_2.jpg" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
-                    </div>
-                    <div class="down-content">
-                        <h4>OPIMA, ERIANNIE JEAN</h4>
-                        <span>Digital Engagement Strategist</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="team-item">
-                    <div class="thumb">
-                        <div class="hover-effect">
-                            <div class="inner-content">
-                                <ul>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-facebook"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-twitter"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-linkedin"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-instagram"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <img src="assets/images/team_member_4.jpg" alt="Team Member" class="img-thumbnail" style="aspect-ratio: 175 / 161; width: 100%; height: auto;">
-                    </div>
-                    <div class="down-content">
-                        <h4>VALENCIA, ERROL JOHN</h4>
-                        <span>QA Specialist (Quality Assurance)</span>
                     </div>
                 </div>
             </div>
@@ -190,21 +185,21 @@
                 <div class="service-item">
                     <h4>Personalized Style</h4>
                     <p>Get personalized styling advice to discover pieces that make you feel confident, unique, and true to your taste.</p>
-                    <img src="assets/images/service-01.jpg" alt="Personalized Styling Service">
+                    <img src="assets/images/service-01.webp" alt="Personalized Styling Service">
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="service-item">
                     <h4>Curated Picks</h4>
                     <p>Enjoy early access to limited-edition products and exclusive launches made just for our loyal customers.</p>
-                    <img src="assets/images/service-02.jpg" alt="Curated Collections Service">
+                    <img src="assets/images/service-02.webp" alt="Curated Collections Service">
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="service-item">
                     <h4>Exclusive Access</h4>
                     <p>Enjoy exclusive access to limited-edition products and early launches, designed just for our loyal customers.</p>
-                    <img src="assets/images/service-03.jpg" alt="Exclusive Member Access">
+                    <img src="assets/images/service-03.webp" alt="Exclusive Member Access">
                 </div>
             </div>
         </div>

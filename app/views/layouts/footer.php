@@ -1,5 +1,6 @@
     <?php include_once "../app/views/components/login_modal.php" ?>
     <?php include_once "../app/views/components/register_modal.php" ?>
+    <?php include_once "../app/views/components/profile_modal.php" ?>
 
     <!-- ***** Footer Start ***** -->
     <footer>
@@ -8,7 +9,7 @@
                 <div class="col-lg-3">
                     <div class="first-item">
                         <div class="logo">
-                            <img src="assets/images/logo-bg-dark.png" class="img-fluid" alt="Personalized Online Fashion Shop Logo">
+                            <img src="assets/images/logo-bg-dark.webp" class="img-fluid" alt="Personalized Online Fashion Shop Logo">
                         </div>
                         <ul>
                             <li><a href="#">Collegio De Montalban, Kasiglahan Village, San Jose Montalban, Rizal 1860</a></li>

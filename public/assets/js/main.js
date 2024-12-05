@@ -93,20 +93,6 @@ jQuery(document).ready(function () {
         });
     })
 
-    $("#register_image").change(function (event) {
-        try {
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#register_image_display').attr('src', e.target.result);
-            };
-
-            reader.readAsDataURL(event.target.files[0]);
-        } catch {
-            $('#register_image_display').attr('src', "uploads/users/default-user-image.png");
-        }
-    })
-
     $("#register_form").submit(function () {
         const first_name = $("#register_first_name").val();
         const middle_name = $("#register_middle_name").val();
@@ -183,6 +169,20 @@ jQuery(document).ready(function () {
                     console.error(error);
                 }
             });
+        }
+    })
+
+    $("#register_image").change(function (event) {
+        try {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#register_image_display').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(event.target.files[0]);
+        } catch {
+            $('#register_image_display').attr('src', "uploads/users/default-user-image.png");
         }
     })
 
@@ -295,6 +295,218 @@ jQuery(document).ready(function () {
                 }
             },
             error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    })
+
+    $(".profile").click(function () {
+        const id = user_id;
+
+        is_loading(true, "profile");
+
+        $("#profile_modal").modal("show");
+
+        var formData = new FormData();
+
+        formData.append('id', id);
+
+        formData.append('action', 'get_profile_data');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                const profile_data = response.message;
+
+                $("#profile_image_display").attr("src", "uploads/users/" + profile_data.image);
+
+                $("#profile_first_name").val(profile_data.first_name);
+                $("#profile_middle_name").val(profile_data.middle_name);
+                $("#profile_last_name").val(profile_data.last_name);
+                $("#profile_birthday").val(profile_data.birthday);
+                $("#profile_email").val(profile_data.email);
+                $("#profile_mobile_number").val(profile_data.mobile_number);
+                $("#profile_address").val(profile_data.address);
+                $("#profile_username").val(profile_data.username);
+
+                $("#profile_user_id").val(profile_data.user_id);
+                $("#profile_old_email").val(profile_data.email);
+                $("#profile_old_username").val(profile_data.username);
+                $("#profile_old_password").val(profile_data.password);
+                $("#profile_old_image").val(profile_data.image);
+
+                is_loading(false, "profile");
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    })
+
+    $("#profile_image").change(function (event) {
+        try {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#profile_image_display').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(event.target.files[0]);
+        } catch {
+            $('#profile_image_display').attr('src', "uploads/users/" + $("#profile_old_image").val());
+        }
+    })
+
+    $("#profile_username").keydown(function () {
+        $("#error_register_username").addClass("d-none");
+        $("#profile_username").removeClass("is-invalid");
+    })
+
+    $("#profile_email").keydown(function () {
+        $("#error_register_email").addClass("d-none");
+        $("#profile_email").removeClass("is-invalid");
+    })
+
+    $("#profile_password").keydown(function () {
+        $("#profile_alert").addClass("d-none");
+
+        $("#profile_password").removeClass("is-invalid");
+        $("#profile_confirm_password").removeClass("is-invalid");
+    })
+
+    $("#profile_confirm_password").keydown(function () {
+        $("#profile_alert").addClass("d-none");
+
+        $("#profile_password").removeClass("is-invalid");
+        $("#profile_confirm_password").removeClass("is-invalid");
+    })
+
+    $("#profile_form").submit(function () {
+        const first_name = $("#profile_first_name").val();
+        const middle_name = $("#profile_middle_name").val();
+        const last_name = $("#profile_last_name").val();
+        const birthday = $("#profile_birthday").val();
+        const email = $("#profile_email").val();
+        const mobile_number = $("#profile_mobile_number").val();
+        const address = $("#profile_address").val();
+        const username = $("#profile_username").val();
+        const password = $("#profile_password").val();
+        const confirm_password = $("#profile_confirm_password").val();
+        const image = $("#profile_image").prop("files")[0];
+
+        const user_id = $("#profile_user_id").val();
+        const old_email = $("#profile_old_email").val();
+        const old_username = $("#profile_old_username").val();
+        const old_password = $("#profile_old_password").val();
+        const old_image = $("#profile_old_image").val();
+
+        $("#profile_alert").addClass("d-none");
+
+        is_loading(true, "profile");
+
+        if (password != confirm_password) {
+            $("#profile_alert").text("Passwords do not match!");
+            $("#profile_alert").removeClass("d-none");
+8
+            $("#profile_password").addClass("is-invalid");
+            $("#profile_confirm_password").addClass("is-invalid");
+
+            is_loading(false, "profile");
+        } else {
+            var formData = new FormData();
+
+            formData.append('first_name', first_name);
+            formData.append('middle_name', middle_name);
+            formData.append('last_name', last_name);
+            formData.append('birthday', birthday);
+            formData.append('email', email);
+            formData.append('mobile_number', mobile_number);
+            formData.append('address', address);
+            formData.append('username', username);
+            formData.append('password', password);
+            formData.append('image', image);
+            
+            formData.append('user_id', user_id);
+            formData.append('old_email', old_email);
+            formData.append('old_username', old_username);
+            formData.append('old_password', old_password);
+            formData.append('old_image', old_image);
+            
+            formData.append('action', 'update_profile');
+
+            $.ajax({
+                url: 'server',
+                data: formData,
+                type: 'POST',
+                dataType: 'JSON',
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    const error_username = response.message.is_error_username;
+                    const error_email = response.message.is_error_email;
+
+                    if (!error_username && !error_email) {
+                        location.reload();
+                    } else {
+                        if (error_username) {
+                            $("#error_profile_username").removeClass("d-none");
+                            $("#profile_username").addClass("is-invalid");
+
+                            $("#profile_username").focus();
+                        }
+
+                        if (error_email) {
+                            $("#error_profile_email").removeClass("d-none");
+                            $("#profile_email").addClass("is-invalid");
+
+                            $("#profile_email").focus();
+                        }
+
+                        is_loading(false, "profile");
+                    }
+                },
+                error: function (_, _, error) {
+                    console.error(error);
+                }
+            });
+        }
+    })
+
+    $(document).on("click", ".view_product", function(){
+        const id = $(this).attr("product_id");
+
+        is_loading(true, "product_details");
+
+        $("#product_details_modal").modal("show");
+
+        var formData = new FormData();
+        
+        formData.append('id', id);
+        formData.append('action', 'get_product_data');
+        
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                const product_data = response.message;
+
+                $("#product_details_image").attr("src", "uploads/products/" + product_data.image);
+                $("#product_details_name").html(product_data.name);
+                $("#product_details_category").html(product_data.category);
+                $("#product_details_price").html(parseFloat(product_data.price).toFixed(2));
+
+                is_loading(false, "product_details");
+            },
+            error: function(_, _, error) {
                 console.error(error);
             }
         });

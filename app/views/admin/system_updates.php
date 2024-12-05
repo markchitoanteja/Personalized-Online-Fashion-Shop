@@ -7,9 +7,6 @@
                 <div class="col-sm-6">
                     <h1>System Updates</h1>
                 </div>
-                <div class="col-sm-6">
-                    <button class="btn btn-primary float-right" data-toggle="modal" data-target="#new_system_update_modal"><i class="fas fa-plus mr-1"></i> New System Update</button>
-                </div>
             </div>
         </div>
     </section>
@@ -36,7 +33,7 @@
 
                                     <?php if ($system_updates): ?>
                                         <?php foreach ($system_updates as $system_update): ?>
-                                            <tr>
+                                            <tr class="<?= $system_update["status"] == "unread" ? "text-bold" : null ?>">
                                                 <td><?= date('F j, Y g:i A', strtotime($system_update["created_at"])) ?></td>
                                                 <td><?= strlen($system_update["system_update"]) > 50 ? substr($system_update["system_update"], 0, 70) . '...' : $system_update["system_update"] ?></td>
                                                 <td class="text-center">
@@ -54,7 +51,5 @@
         </div>
     </section>
 </div>
-
-<?php include_once "../app/views/admin/components/view_system_update_modal.php" ?>
 
 <?php include_once "../app/views/admin/templates/footer.php" ?>

@@ -11,14 +11,14 @@
             <form action="javascript:void(0)" id="new_product_form">
                 <div class="modal-body">
                     <div class="loading text-center py-5 d-none">
-                        <img src="../assets/images/loading.gif" alt="Loading GIF" class="mb-3">
+                        <img src="../assets/images/loading.webp" alt="Loading GIF" class="mb-3">
                         <h3 class="text-muted">Loading...</h3>
                     </div>
                     <div class="main-form">
                         <div class="alert alert-danger text-center d-none" id="new_product_alert">Invalid input! Please check the fields.</div>
 
                         <div class="form-group text-center">
-                            <img id="new_product_image_preview" src="../uploads/products/default-item-image.png" alt="Product Image Preview" class="img-thumbnail mb-3" style="width: 200px; height: 150px;">
+                            <img id="new_product_image_preview" src="../uploads/products/default-item-image.png" alt="Product Image Preview" class="img-thumbnail mb-3" style="width: 259px; height: 273px;">
                             <input type="file" class="form-control-file" id="new_product_image" accept="image/*" required>
                         </div>
                         <div class="form-group">

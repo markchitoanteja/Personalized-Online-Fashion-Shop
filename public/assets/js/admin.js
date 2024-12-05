@@ -20,10 +20,7 @@ jQuery(document).ready(function () {
             processData: false,
             contentType: false,
             success: function (response) {
-                if (response.success) {
-                    $("#system_updates_counter").addClass("d-none");
-                    $('.system_updates').removeClass('text-bold');
-                }
+                $("#system_updates_counter").addClass("d-none");
             },
             error: function (_, _, error) {
                 console.error(error);
@@ -154,6 +151,8 @@ jQuery(document).ready(function () {
     $(document).on("click", ".view_system_update", function () {
         const id = $(this).attr("system_update_id");
 
+        $(`[system_update_id="${id}"]`).closest('tr, span').removeClass('text-bold');
+
         is_loading(true, "");
 
         $("#view_system_update_modal").modal("show");
@@ -161,7 +160,6 @@ jQuery(document).ready(function () {
         var formData = new FormData();
 
         formData.append('id', id);
-
         formData.append('action', 'get_system_update_data');
 
         $.ajax({
@@ -173,23 +171,42 @@ jQuery(document).ready(function () {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    const createdAt = new Date(response.message.created_at);
+                    var formData_2 = new FormData();
 
-                    const options = {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        hour12: true
-                    };
+                    formData_2.append('id', response.message.id);
+                    
+                    formData_2.append('action', 'update_system_update');
 
-                    const formattedDate = createdAt.toLocaleString('en-US', options);
+                    $.ajax({
+                        url: '../server',
+                        data: formData_2,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        processData: false,
+                        contentType: false,
+                        success: function (response_2) {
+                            const createdAt = new Date(response.message.created_at);
 
-                    $("#view_system_update_created_at").text(formattedDate);
-                    $("#view_system_update_system_update").text(response.message.system_update);
+                            const options = {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                hour12: true
+                            };
 
-                    is_loading(false, "");
+                            const formattedDate = createdAt.toLocaleString('en-US', options);
+
+                            $("#view_system_update_created_at").html(formattedDate);
+                            $("#view_system_update_system_update").html(response.message.system_update);
+
+                            is_loading(false, "");
+                        },
+                        error: function (_, _, error) {
+                            console.error(error);
+                        }
+                    });
                 }
             },
             error: function (_, _, error) {

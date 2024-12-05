@@ -11,7 +11,7 @@
             <form action="javascript:void(0)" id="new_system_update_form">
                 <div class="modal-body">
                     <div class="loading text-center py-5 d-none">
-                        <img src="../assets/images/loading.gif" alt="Loading GIF" class="mb-3">
+                        <img src="../assets/images/loading.webp" alt="Loading GIF" class="mb-3">
                         <h3 class="text-muted">Loading...</h3>
                     </div>
                     <div class="main-form">
