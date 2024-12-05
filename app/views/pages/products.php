@@ -68,6 +68,10 @@ $data = $database->query($sql, [$records_per_page, $offset]);
                         </div>
                     </div>
                 <?php endforeach ?>
+            <?php else: ?>
+                <div class="col-lg-12">
+                    <h1 class="text-muted text-center">No Available Data</h1>
+                </div>
             <?php endif ?>
 
             <?php if ($total_pages > 1): ?>

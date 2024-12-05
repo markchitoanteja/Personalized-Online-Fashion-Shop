@@ -44,7 +44,7 @@ if (session("user_id")) {
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/templatemo-hexashop.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/templatemo-hexashop.css?v=<?= version() ?>">
     <link rel="stylesheet" type="text/css" href="assets/css/owl-carousel.css">
     <link rel="stylesheet" type="text/css" href="assets/css/lightbox.css">
     <link rel="stylesheet" type="text/css" href="assets/css/sweetalert2.min.css">

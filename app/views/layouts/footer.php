@@ -79,7 +79,7 @@
     <script src="assets/js/isotope.js"></script>
     <script src="assets/js/sweetalert2.min.js"></script>
     <script src="assets/js/custom.min.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=<?= version() ?>"></script>
     </body>
 
     </html>

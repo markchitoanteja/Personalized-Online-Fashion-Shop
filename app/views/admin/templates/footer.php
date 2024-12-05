@@ -3,7 +3,7 @@
 
         <footer class="main-footer">
             <div class="float-right d-none d-sm-block">
-                <b>Version</b> <?= $version ?>
+                <b>Version</b> <?= version() ?>
             </div>
             <strong>Copyright &copy; 2024 <a href="/">Personalized Online Fashion Shop</a>.</strong> All rights reserved.
         </footer>
@@ -26,7 +26,7 @@
     <script src="../assets/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="../assets/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
     <script src="../assets/admin/dist/js/adminlte.min.js"></script>
-    <script src="../assets/js/admin.js"></script>
+    <script src="../assets/js/admin.js?v=<?= version() ?>"></script>
 </body>
 
 </html>

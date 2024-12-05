@@ -23,15 +23,6 @@ if (session("user_id")) {
         if ($system_updates) {
             $unread_updates = count($database->select_many("system_updates", ["status" => "unread"]));
         }
-
-        $branch = 'main';
-        $commitCount = (int) trim(shell_exec("git rev-list --count $branch"));
-
-        $major = 1 + (int) floor(($commitCount - 1) / 100);
-        $minor = (int) floor((($commitCount - 1) % 100) / 10);
-        $patch = ($commitCount - 1) % 10;
-
-        $version = "$major.$minor.$patch";
     }
 } else {
     $notification_message = [
