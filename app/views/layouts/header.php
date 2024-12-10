@@ -61,6 +61,11 @@ if (session("user_id")) {
     </div>
     <!-- ***** Preloader End ***** -->
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="d-none">
+        <div class="spinner"></div>
+    </div>
+
     <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky">
         <div class="container">

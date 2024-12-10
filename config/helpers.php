@@ -258,25 +258,19 @@ function upload(string $file, string $path)
 }
 
 /**
- * Generates a semantic version number based on the Git commit count.
+ * Generates a semantic version number.
  *
- * This function calculates a version number in the format `major.minor.patch` 
- * derived from the number of commits on the `main` branch of the Git repository. 
  * - The major version is incremented every 100 commits.
  * - The minor version increments every 10 commits within the current major cycle.
  * - The patch version increments for each commit within the current minor cycle.
  *
  * @return string The semantic version string in the format "major.minor.patch".
- * 
- * @throws Exception If the `git rev-list` command fails or is unavailable.
  */
 function version()
 {
-    $commitCount = (int) trim(shell_exec("git rev-list --count main"));
-
-    $major = 1 + (int) floor(($commitCount - 1) / 100);
-    $minor = (int) floor((($commitCount - 1) % 100) / 10);
-    $patch = ($commitCount - 1) % 10;
+    $major = 0;
+    $minor = 1;
+    $patch = 3;
 
     return "$major.$minor.$patch";
 }

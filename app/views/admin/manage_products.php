@@ -42,8 +42,8 @@
                                                 <td><?= $product["category"] ?></td>
                                                 <td>₱ <?= $product["price"] ?></td>
                                                 <td class="text-center">
-                                                    <i class="fas fa-pencil-alt text-primary mr-1 no-function" role="button" product_id="<?= $product["id"] ?>"></i>
-                                                    <i class="fas fa-trash-alt text-danger no-function" role="button" product_id="<?= $product["id"] ?>"></i>
+                                                    <i class="fas fa-pencil-alt text-primary mr-1 update_product" role="button" product_id="<?= $product["id"] ?>"></i>
+                                                    <i class="fas fa-trash-alt text-danger delete_product" role="button" product_id="<?= $product["id"] ?>"></i>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>
@@ -59,5 +59,6 @@
 </div>
 
 <?php include_once "../app/views/admin/components/new_product_modal.php" ?>
+<?php include_once "../app/views/admin/components/update_product_modal.php" ?>
 
 <?php include_once "../app/views/admin/templates/footer.php" ?>

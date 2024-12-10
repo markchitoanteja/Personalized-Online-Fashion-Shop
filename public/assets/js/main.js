@@ -412,7 +412,7 @@ jQuery(document).ready(function () {
         if (password != confirm_password) {
             $("#profile_alert").text("Passwords do not match!");
             $("#profile_alert").removeClass("d-none");
-8
+            8
             $("#profile_password").addClass("is-invalid");
             $("#profile_confirm_password").addClass("is-invalid");
 
@@ -430,13 +430,13 @@ jQuery(document).ready(function () {
             formData.append('username', username);
             formData.append('password', password);
             formData.append('image', image);
-            
+
             formData.append('user_id', user_id);
             formData.append('old_email', old_email);
             formData.append('old_username', old_username);
             formData.append('old_password', old_password);
             formData.append('old_image', old_image);
-            
+
             formData.append('action', 'update_profile');
 
             $.ajax({
@@ -477,7 +477,7 @@ jQuery(document).ready(function () {
         }
     })
 
-    $(document).on("click", ".view_product", function(){
+    $(document).on("click", ".view_product", function () {
         const id = $(this).attr("product_id");
 
         is_loading(true, "product_details");
@@ -485,10 +485,10 @@ jQuery(document).ready(function () {
         $("#product_details_modal").modal("show");
 
         var formData = new FormData();
-        
+
         formData.append('id', id);
         formData.append('action', 'get_product_data');
-        
+
         $.ajax({
             url: 'server',
             data: formData,
@@ -496,7 +496,7 @@ jQuery(document).ready(function () {
             dataType: 'JSON',
             processData: false,
             contentType: false,
-            success: function(response) {
+            success: function (response) {
                 const product_data = response.message;
 
                 $("#product_details_image").attr("src", "uploads/products/" + product_data.image);
@@ -506,11 +506,19 @@ jQuery(document).ready(function () {
 
                 is_loading(false, "product_details");
             },
-            error: function(_, _, error) {
+            error: function (_, _, error) {
                 console.error(error);
             }
         });
     })
+
+    function showLoadingOverlay() {
+        $('#loading-overlay').removeClass("d-none").fadeIn();
+    }
+
+    function hideLoadingOverlay() {
+        $('#loading-overlay').fadeOut();
+    }
 
     function is_loading(state, modal_name) {
         if (typeof state !== 'boolean') {

@@ -34,8 +34,6 @@
                     <ul>
                         <li><a href="https://www.facebook.com/profile.php?id=100064269721973&sk=about&section=bio" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a></li>
                         <li><a href="https://www.instagram.com/personalizeonlineshop/"><i class="fa fa-instagram" target="_blank" rel="noopener noreferrer"></i></a></li>
-                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-twitter"></i></a></li>
-                        <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-linkedin"></i></a></li>
                     </ul>
                 </div>
             </div>

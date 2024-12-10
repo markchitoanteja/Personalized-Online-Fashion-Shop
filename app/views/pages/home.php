@@ -184,7 +184,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                     <div class="thumb">
                                         <div class="hover-content">
                                             <ul>
-                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="view_product" product_id="<?= $women["id"] ?>"><i class="fa fa-eye"></i></a></li>
                                                 <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
                                             </ul>
                                         </div>
@@ -230,7 +230,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                     <div class="thumb">
                                         <div class="hover-content">
                                             <ul>
-                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-eye"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="view_product" product_id="<?= $kid["id"] ?>"><i class="fa fa-eye"></i></a></li>
                                                 <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
                                             </ul>
                                         </div>

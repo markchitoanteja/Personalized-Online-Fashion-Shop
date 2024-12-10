@@ -1,5 +1,7 @@
+        <?php include_once "../app/views/admin/components/account_settings_modal.php" ?>
+        <?php include_once "../app/views/admin/components/about_us_modal.php" ?>
         <?php include_once "../app/views/admin/components/new_system_update_modal.php" ?>
-        <?php include_once "../app/views/admin/components/view_system_update_modal.php" ?>11
+        <?php include_once "../app/views/admin/components/view_system_update_modal.php" ?>
 
         <footer class="main-footer">
             <div class="float-right d-none d-sm-block">

@@ -267,6 +267,67 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
+    private function update_product()
+    {
+        $name = post("name");
+        $category = post("category");
+        $price = post("price");
+
+        $id = post("id");
+        $old_image = post("old_image");
+
+        $image = file_data("image") ? upload("image", "uploads/products") : $old_image;
+
+        if ($image) {
+            $data = [
+                "name" => $name,
+                "category" => $category,
+                "price" => $price,
+                "image" => $image,
+                "updated_at" => date("Y-m-d H:i:s"),
+            ];
+
+            $this->database->update("products", $data, ["id" => $id]);
+
+            $notification_message = [
+                "title" => "Success!",
+                "text" => "A new product has been updated successfully.",
+                "icon" => "success",
+            ];
+
+            $this->success = true;
+        } else {
+            $notification_message = [
+                "title" => "Oops...",
+                "text" => "There was an error while uploading your image.",
+                "icon" => "error",
+            ];
+        }
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function delete_product()
+    {
+        $id = post("id");
+
+        $this->database->delete("products", ["id" => $id]);
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "A product has been successfully deleted.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
     private function new_system_update()
     {
         $system_update = post("system_update");
@@ -409,6 +470,54 @@ class Controller
 
         $this->success = true;
         $this->message = $product_data;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_user_data()
+    {
+        $id = post("id");
+
+        $user_data = $this->database->select_one("users", ["id" => $id]);
+
+        $this->success = true;
+        $this->message = $user_data;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function update_user_account()
+    {
+        $name = post("name");
+        $username = post("username");
+        $password = post("password");
+
+        $id = post("id");
+        $old_password = post("old_password");
+        $old_image = post("old_image");
+
+        $image = file_data("image") ? upload("image", "uploads/users") : $old_image;
+        $password = $password ? password_hash($password, PASSWORD_BCRYPT) : $old_password;
+
+        $data = [
+            "name" => $name,
+            "username" => $username,
+            "password" => $password,
+            "image" => $image,
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        if ($this->database->update("users", $data, ["id" => $id])) {
+            $notification_message = [
+                "title" => "Success!",
+                "text" => "Your account has been successfully updated.",
+                "icon" => "success",
+            ];
+
+            $this->success = true;
+
+            session("notification", $notification_message);
+        }
 
         $this->response($this->success, $this->message);
     }

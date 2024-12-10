@@ -100,7 +100,7 @@ if (session("user_id")) {
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <?php if ($system_updates): ?>
-                                <?php foreach ($system_updates as $system_update): ?>
+                                <?php foreach (array_slice($system_updates, 0, 5) as $system_update): ?>
                                     <span system_update_id="<?= $system_update["id"] ?>" class="dropdown-item text-truncate view_system_update <?= $system_update["status"] == "unread" ? "text-bold" : null ?>" role="button">
                                         <i class="fas fa-info-circle mr-2"></i> <?= $system_update["system_update"] ?>
                                     </span>
@@ -127,12 +127,12 @@ if (session("user_id")) {
                             </a>
                             <div class="dropdown-divider"></div>
                         <?php endif ?>
-                        <a href="javascript:void(0)" class="dropdown-item account_settings no-function">
+                        <a href="javascript:void(0)" class="dropdown-item account_settings">
                             <i class="fas fa-user mr-2"></i>
                             Account Settings
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="javascript:void(0)" class="dropdown-item no-function">
+                        <a href="javascript:void(0)" class="dropdown-item" data-toggle="modal" data-target="#about_us_modal">
                             <i class="fas fa-info-circle mr-2"></i>
                             About
                         </a>
@@ -154,10 +154,10 @@ if (session("user_id")) {
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../uploads/users/<?= $user_data["image"] ?>" class="img-circle elevation-2" alt="User Image">
+                        <img src="../uploads/users/<?= $user_data["image"] ?>" class="img-circle elevation-2" alt="User Image" style="width: 34; aspect-ratio: 1 / 1;">
                     </div>
                     <div class="info">
-                        <a href="javascript:void(0)" class="d-block account_settings no-function"><?= $user_data["name"] ?></a>
+                        <a href="javascript:void(0)" class="d-block account_settings"><?= $user_data["name"] ?></a>
                     </div>
                 </div>
 
