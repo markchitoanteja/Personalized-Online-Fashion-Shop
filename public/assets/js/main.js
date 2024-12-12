@@ -512,6 +512,58 @@ jQuery(document).ready(function () {
         });
     })
 
+    $(document).on("click", ".add_to_cart", function () {
+        const customer_id = user_id;
+        const product_id = $(this).attr("product_id");
+
+        if (customer_id) {
+            showLoadingOverlay();
+
+            var formData = new FormData();
+
+            formData.append('product_id', product_id);
+            formData.append('user_id', customer_id);
+
+            formData.append('action', 'add_to_cart');
+
+            $.ajax({
+                url: 'server',
+                data: formData,
+                type: 'POST',
+                dataType: 'JSON',
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        cart = response.message.cart;
+
+                        $("#cart").removeClass("d-none");
+                        $("#cart").text(cart);
+
+                        hideLoadingOverlay();
+
+                        setTimeout(function () {
+                            Swal.fire({
+                                title: "Success",
+                                text: "Successfully added to your shopping cart.",
+                                icon: "success"
+                            });
+                        }, 300);
+                    }
+                },
+                error: function (_, _, error) {
+                    console.error(error);
+                }
+            });
+        } else {
+            Swal.fire({
+                title: "Oops...",
+                text: "You need to login first!",
+                icon: "error"
+            });
+        }
+    })
+
     function showLoadingOverlay() {
         $('#loading-overlay').removeClass("d-none").fadeIn();
     }

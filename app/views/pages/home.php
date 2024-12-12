@@ -139,7 +139,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                         <div class="hover-content">
                                             <ul>
                                                 <li><a href="javascript:void(0)" class="view_product" product_id="<?= $men["id"] ?>"><i class="fa fa-eye"></i></a></li>
-                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="add_to_cart" product_id="<?= $men["id"] ?>"><i class="fa fa-shopping-cart"></i></a></li>
                                             </ul>
                                         </div>
                                         <img src="uploads/products/<?= htmlspecialchars($men["image"], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($men["name"], ENT_QUOTES, 'UTF-8') ?>" style="aspect-ratio: 37 / 39; width: 100%; height: auto;">
@@ -185,7 +185,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                         <div class="hover-content">
                                             <ul>
                                                 <li><a href="javascript:void(0)" class="view_product" product_id="<?= $women["id"] ?>"><i class="fa fa-eye"></i></a></li>
-                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="add_to_cart" product_id="<?= $women["id"] ?>"><i class="fa fa-shopping-cart"></i></a></li>
                                             </ul>
                                         </div>
                                         <img src="uploads/products/<?= htmlspecialchars($women["image"], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($women["name"], ENT_QUOTES, 'UTF-8') ?>" style="aspect-ratio: 37 / 39; width: 100%; height: auto;">
@@ -231,7 +231,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                         <div class="hover-content">
                                             <ul>
                                                 <li><a href="javascript:void(0)" class="view_product" product_id="<?= $kid["id"] ?>"><i class="fa fa-eye"></i></a></li>
-                                                <li><a href="javascript:void(0)" class="no-function"><i class="fa fa-shopping-cart"></i></a></li>
+                                                <li><a href="javascript:void(0)" class="add_to_cart" product_id="<?= $kid["id"] ?>"><i class="fa fa-shopping-cart"></i></a></li>
                                             </ul>
                                         </div>
                                         <img src="uploads/products/<?= htmlspecialchars($kid["image"], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($kid["name"], ENT_QUOTES, 'UTF-8') ?>" style="aspect-ratio: 37 / 39; width: 100%; height: auto;">

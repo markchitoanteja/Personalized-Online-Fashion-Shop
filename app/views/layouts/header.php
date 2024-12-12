@@ -4,11 +4,13 @@ $database = new Database();
 $user_data = null;
 
 if (session("user_id")) {
-    $user_data = $database->select_one("users", ["id" => session("user_id")]);
-
     if ((session("user_type") == "developer") || (session("user_type") == "admin")) {
         redirect("admin/dashboard");
     }
+
+    $user_data = $database->select_one("users", ["id" => session("user_id")]);
+
+    $cart = count($database->select_many("orders", ["user_id" => session("user_id")]));
 }
 ?>
 
@@ -93,7 +95,7 @@ if (session("user_id")) {
                                     <a href="javascript:void(0)"><?= $user_data["name"] ?></a>
                                     <ul>
                                         <li><a href="javascript:void(0)" class="profile">Profile</a></li>
-                                        <li><a href="javascript:void(0)" class="no-function">Cart <span class="badge badge-danger badge-pill ml-3">2</span></a></li>
+                                        <li><a href="javascript:void(0)" class="no-function">Cart <span class="badge badge-danger badge-pill ml-3 <?= $cart ? null : "d-none" ?>" id="cart"><?= $cart ?></span></a></li>
                                         <li><a href="javascript:void(0)" class="no-function">Orders</a></li>
                                         <li><a href="javascript:void(0)" class="logout">Logout</a></li>
                                     </ul>

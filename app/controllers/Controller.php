@@ -522,6 +522,47 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
+    private function add_to_cart()
+    {
+        $user_id = post("user_id");
+        $product_id = post("product_id");
+        $quantity = 1;
+
+        $order = $this->database->select_one("orders", ["user_id" => $user_id, "product_id" => $product_id, "status" => "Cart"], "AND");
+
+        if ($order) {
+            $id = $order["id"];
+            $quantity = intval($order["quantity"]) + 1;
+
+            $data = [
+                "quantity" => $quantity,
+                "updated_at" => date("Y-m-d H:i:s"),
+            ];
+
+            $this->database->update("orders", $data, ["id" => $id]);
+        } else {
+            $data = [
+                "uuid" => $this->database->generate_uuid(),
+                "user_id" => $user_id,
+                "product_id" => $product_id,
+                "quantity" => $quantity,
+                "total_price" => 0,
+                "status" => "Cart",
+                "created_at" => date("Y-m-d H:i:s"),
+                "updated_at" => date("Y-m-d H:i:s"),
+            ];
+
+            $this->database->insert("orders", $data);
+        }
+
+        $cart = count($this->database->select_many("orders", ["user_id" => $user_id]));
+
+        $this->message = ["cart" => $cart];
+        $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
     private function logout()
     {
         session("user_id", "unset");
