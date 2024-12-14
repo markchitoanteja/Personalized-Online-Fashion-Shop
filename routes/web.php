@@ -6,6 +6,7 @@ $routes = [
     'products' => '../app/views/pages/products.php',
     'about_us' => '../app/views/pages/about_us.php',
     'contact_us' => '../app/views/pages/contact_us.php',
+    'cart' => '../app/views/pages/cart.php',
 
     // Admin Pages
     'admin' => '../app/views/admin/dashboard.php',

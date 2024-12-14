@@ -528,25 +528,30 @@ class Controller
         $product_id = post("product_id");
         $quantity = 1;
 
+        $product = $this->database->select_one("products", ["id" => $product_id], "AND");
         $order = $this->database->select_one("orders", ["user_id" => $user_id, "product_id" => $product_id, "status" => "Cart"], "AND");
 
         if ($order) {
             $id = $order["id"];
             $quantity = intval($order["quantity"]) + 1;
+            $total_price = floatval($product["price"]) * $quantity;
 
             $data = [
                 "quantity" => $quantity,
+                "total_price" => $total_price,
                 "updated_at" => date("Y-m-d H:i:s"),
             ];
 
             $this->database->update("orders", $data, ["id" => $id]);
         } else {
+            $total_price = floatval($product["price"]) * $quantity;
+
             $data = [
                 "uuid" => $this->database->generate_uuid(),
                 "user_id" => $user_id,
                 "product_id" => $product_id,
                 "quantity" => $quantity,
-                "total_price" => 0,
+                "total_price" => $total_price,
                 "status" => "Cart",
                 "created_at" => date("Y-m-d H:i:s"),
                 "updated_at" => date("Y-m-d H:i:s"),

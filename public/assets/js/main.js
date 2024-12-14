@@ -15,6 +15,10 @@ jQuery(document).ready(function () {
         });
     }
 
+    $(".datatable").DataTable({
+        ordering: false
+    })
+
     $('a[href^="#"]').on('click', function (e) {
         e.preventDefault();
 
@@ -562,6 +566,18 @@ jQuery(document).ready(function () {
                 icon: "error"
             });
         }
+    })
+
+    $('#order_table thead input[type="checkbox"]').on('change', function () {
+        var isChecked = $(this).is(':checked');
+        
+        $('#order_table tbody input[type="checkbox"]').prop('checked', isChecked);
+    })
+
+    $('#order_table tbody input[type="checkbox"]').on('change', function () {
+        var allChecked = $('#order_table tbody input[type="checkbox"]').length === $('#order_table tbody input[type="checkbox"]:checked').length;
+        
+        $('#order_table thead input[type="checkbox"]').prop('checked', allChecked);
     })
 
     function showLoadingOverlay() {

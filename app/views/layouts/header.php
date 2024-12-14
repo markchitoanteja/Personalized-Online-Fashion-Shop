@@ -50,6 +50,7 @@ if (session("user_id")) {
     <link rel="stylesheet" type="text/css" href="assets/css/owl-carousel.css">
     <link rel="stylesheet" type="text/css" href="assets/css/lightbox.css">
     <link rel="stylesheet" type="text/css" href="assets/css/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/dataTables.css">
 </head>
 
 <body>
@@ -95,7 +96,7 @@ if (session("user_id")) {
                                     <a href="javascript:void(0)"><?= $user_data["name"] ?></a>
                                     <ul>
                                         <li><a href="javascript:void(0)" class="profile">Profile</a></li>
-                                        <li><a href="javascript:void(0)" class="no-function">Cart <span class="badge badge-danger badge-pill ml-3 <?= $cart ? null : "d-none" ?>" id="cart"><?= $cart ?></span></a></li>
+                                        <li><a href="cart" class="<?= session("page") == "cart" ? "bg-white" : null ?>">Cart <span class="badge badge-danger badge-pill ml-3 <?= $cart ? null : "d-none" ?>" id="cart"><?= $cart ?></span></a></li>
                                         <li><a href="javascript:void(0)" class="no-function">Orders</a></li>
                                         <li><a href="javascript:void(0)" class="logout">Logout</a></li>
                                     </ul>
