@@ -474,6 +474,21 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
+    private function get_order_data_with_product_name()
+    {
+        $id = post("id");
+
+        $order_data = $this->database->select_one("orders", ["id" => $id]);
+        $product_id = $order_data["product_id"];
+
+        $product_name = $this->database->select_one("products", ["id" => $product_id])["name"];
+
+        $this->success = true;
+        $this->message = array_merge($order_data, ["product_name" => $product_name]);
+
+        $this->response($this->success, $this->message);
+    }
+
     private function get_user_data()
     {
         $id = post("id");
@@ -528,7 +543,7 @@ class Controller
         $product_id = post("product_id");
         $quantity = 1;
 
-        $product = $this->database->select_one("products", ["id" => $product_id], "AND");
+        $product = $this->database->select_one("products", ["id" => $product_id]);
         $order = $this->database->select_one("orders", ["user_id" => $user_id, "product_id" => $product_id, "status" => "Cart"], "AND");
 
         if ($order) {
@@ -542,7 +557,7 @@ class Controller
                 "updated_at" => date("Y-m-d H:i:s"),
             ];
 
-            $this->database->update("orders", $data, ["id" => $id]);
+            $this->database->update("orders", $data, ["id" => $id, "status" => "Cart"]);
         } else {
             $total_price = floatval($product["price"]) * $quantity;
 
@@ -560,12 +575,59 @@ class Controller
             $this->database->insert("orders", $data);
         }
 
-        $cart = count($this->database->select_many("orders", ["user_id" => $user_id]));
+        $cart = count($this->database->select_many("orders", ["user_id" => $user_id, "status" => "Cart"]));
 
         $this->message = ["cart" => $cart];
         $this->success = true;
 
         $this->response($this->success, $this->message);
+    }
+
+    private function delete_orders()
+    {
+        $order_ids = isset($_POST['order_ids']) ? json_decode($_POST['order_ids'], true) : [];
+
+        foreach ($order_ids as $order_id) {
+            $this->database->delete("orders", ["id" => $order_id]);
+        }
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "Selected orders deleted successfully.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function place_orders()
+    {
+        $order_ids = explode(",", post("order_ids"));
+
+        foreach ($order_ids as $order_id) {
+            $data = [
+                "status" => "Placed",
+                "updated_at" => date("Y-m-d H:i:s"),
+            ];
+
+            $this->database->update("orders", $data, ["id" => $order_id]);
+        }
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "The selected orders have been placed successfully.",
+            "icon" => "success",
+        ];
+
+        session("notification", $notification_message);
+
+        $this->success = true;
+
+        $this->response($this->success, $order_ids);
     }
 
     private function logout()

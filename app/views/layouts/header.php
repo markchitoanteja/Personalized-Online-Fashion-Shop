@@ -4,13 +4,24 @@ $database = new Database();
 $user_data = null;
 
 if (session("user_id")) {
-    if ((session("user_type") == "developer") || (session("user_type") == "admin")) {
+    if (in_array(session("user_type"), ["developer", "admin"])) {
         redirect("admin/dashboard");
     }
 
     $user_data = $database->select_one("users", ["id" => session("user_id")]);
 
-    $cart = count($database->select_many("orders", ["user_id" => session("user_id")]));
+    $cart = count($database->select_many("orders", ["user_id" => session("user_id"), "status" => "Cart"]));
+    $placed = count($database->select_many("orders", ["user_id" => session("user_id"), "status" => "Placed"]));
+}
+
+if (in_array(session("page"), ["cart", "orders"]) && !session("user_id")) {
+    session("notification", [
+        "title" => "Oops...",
+        "text" => "You need to login first!",
+        "icon" => "error",
+    ]);
+
+    redirect("/");
 }
 ?>
 
@@ -50,7 +61,7 @@ if (session("user_id")) {
     <link rel="stylesheet" type="text/css" href="assets/css/owl-carousel.css">
     <link rel="stylesheet" type="text/css" href="assets/css/lightbox.css">
     <link rel="stylesheet" type="text/css" href="assets/css/sweetalert2.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/dataTables.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/dataTables.min.css">
 </head>
 
 <body>
@@ -97,7 +108,7 @@ if (session("user_id")) {
                                     <ul>
                                         <li><a href="javascript:void(0)" class="profile">Profile</a></li>
                                         <li><a href="cart" class="<?= session("page") == "cart" ? "bg-white" : null ?>">Cart <span class="badge badge-danger badge-pill ml-3 <?= $cart ? null : "d-none" ?>" id="cart"><?= $cart ?></span></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function">Orders</a></li>
+                                        <li><a href="javascript:void(0)" class="no-function">Orders <span class="badge badge-danger badge-pill ml-3 <?= $placed ? null : "d-none" ?>" id="placed"><?= $placed ?></span></a></li>
                                         <li><a href="javascript:void(0)" class="logout">Logout</a></li>
                                     </ul>
                                 </li>

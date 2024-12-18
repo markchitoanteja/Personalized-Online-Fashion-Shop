@@ -61,6 +61,7 @@
     <script>
         var user_id = "<?= session("user_id") ?>";
         var user_type = "<?= session("user_type") ?>";
+        var page = "<?= session("page") ?>";
         var notification = <?= session("notification") ? json_encode(session("notification")) : json_encode(null) ?>;
     </script>
 
@@ -79,10 +80,9 @@
     <script src="assets/js/isotope.js"></script>
     <script src="assets/js/sweetalert2.min.js"></script>
     <script src="assets/js/custom.min.js"></script>
-    <script src="assets/js/dataTables.js"></script>
-    <script src="assets/js/dataTables.bootstrap4.js"></script>
+    <script src="assets/js/dataTables.min.js"></script>
     <script src="assets/js/main.js?v=<?= version() ?>"></script>
-    
+
     </body>
 
     </html>

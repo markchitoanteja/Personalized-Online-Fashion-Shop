@@ -49,7 +49,11 @@ jQuery(document).ready(function () {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    location.reload();
+                    if (page == "cart" || page == "orders") {
+                        location.href = "/";
+                    } else {
+                        location.reload();
+                    }
                 }
             },
             error: function (_, _, error) {
@@ -570,15 +574,197 @@ jQuery(document).ready(function () {
 
     $('#order_table thead input[type="checkbox"]').on('change', function () {
         var isChecked = $(this).is(':checked');
-        
+
         $('#order_table tbody input[type="checkbox"]').prop('checked', isChecked);
+
+        if ($('#order_table tbody input[type="checkbox"]:checked').length > 0) {
+            $("#place_order").removeClass("d-none");
+            $("#delete_order").removeClass("d-none");
+        } else {
+            $("#place_order").addClass("d-none");
+            $("#delete_order").addClass("d-none");
+        }
     })
 
     $('#order_table tbody input[type="checkbox"]').on('change', function () {
         var allChecked = $('#order_table tbody input[type="checkbox"]').length === $('#order_table tbody input[type="checkbox"]:checked').length;
-        
+
         $('#order_table thead input[type="checkbox"]').prop('checked', allChecked);
+
+        if ($('#order_table tbody input[type="checkbox"]:checked').length > 0) {
+            $("#place_order").removeClass("d-none");
+            $("#delete_order").removeClass("d-none");
+        } else {
+            $("#place_order").addClass("d-none");
+            $("#delete_order").addClass("d-none");
+        }
     })
+
+    $("#place_order").click(function () {
+        $("#order_summary_modal").modal("show");
+
+        is_loading(true, "order_summary");
+
+        let selectedItems = getCheckedItems();
+        let grand_total = 0;
+
+        let receiptHTML = `
+            <div class="receipt-container p-3">
+                <div class="receipt-header text-center mb-3">
+                    <h4>Order Receipt</h4>
+                    <p>Date: ${new Date().toLocaleDateString()}</p>
+                </div>
+                <div class="receipt-body">
+                    <ul class="list-group">
+        `;
+
+        let ajaxCalls = [];
+        let order_ids = [];
+
+        selectedItems.forEach((item) => {
+            const order_id = item.order_id;
+
+            order_ids.push(order_id);
+
+            var formData = new FormData();
+
+            formData.append('id', order_id);
+            formData.append('action', 'get_order_data_with_product_name');
+
+            let ajaxCall = $.ajax({
+                url: 'server',
+                data: formData,
+                type: 'POST',
+                dataType: 'JSON',
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    const order_data = response.message;
+                    const product_name = order_data.product_name;
+                    const quantity = order_data.quantity;
+                    const total_price = order_data.total_price;
+
+                    grand_total = grand_total + total_price;
+
+                    receiptHTML += `
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${product_name}</strong>
+                                <p class="mb-0">Quantity: ${quantity}</p>
+                            </div>
+                            <span>₱${total_price.toFixed(2)}</span>
+                        </li>
+                    `;
+                },
+                error: function (_, _, error) {
+                    console.error(error);
+                },
+            });
+
+            ajaxCalls.push(ajaxCall);
+        });
+
+        $.when(...ajaxCalls).done(function () {
+            receiptHTML += `
+                    </ul>
+                </div>
+                <div class="receipt-footer mt-3 text-right">
+                    <h5>Total: 
+                        <span>₱${grand_total.toFixed(2)}</span>
+                    </h5>
+                </div>
+            </div>
+            
+            <small class="text-muted"><b>Information:</b> Discounts will be applied after the seller approves the order.</small>
+            `;
+
+            $("#orderSummaryContent").html(receiptHTML);
+
+            $("#order_summary_order_ids").val(order_ids);
+
+            is_loading(false, "order_summary");
+        });
+    })
+
+    $("#delete_order").click(function () {
+        let selectedItems = getCheckedItems();
+        let orderIds = selectedItems.map(item => item.order_id);
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData();
+
+                formData.append('action', 'delete_orders');
+                formData.append('order_ids', JSON.stringify(orderIds));
+
+                $.ajax({
+                    url: '../server',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error("Error: ", error);
+                    }
+                });
+            }
+        });
+    })
+
+    $("#order_summary_form").submit(function () {
+        const order_ids = $("#order_summary_order_ids").val();
+
+        is_loading(true, "order_summary");
+
+        var formData = new FormData();
+
+        formData.append('order_ids', order_ids);
+        formData.append('action', 'place_orders');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    })
+
+    function getCheckedItems() {
+        let checkedItems = [];
+
+        $('#order_table tbody input[type="checkbox"]:checked').each(function () {
+            let row = $(this).closest('tr');
+            let order_id = row.find('td:nth-child(2)').attr("order_id");
+
+            checkedItems.push({ order_id: order_id });
+        });
+
+        return checkedItems;
+    }
 
     function showLoadingOverlay() {
         $('#loading-overlay').removeClass("d-none").fadeIn();
