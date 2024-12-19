@@ -630,6 +630,86 @@ class Controller
         $this->response($this->success, $order_ids);
     }
 
+    private function get_conversation_data()
+    {
+        $id = post("id");
+
+        $sql = "SELECT * FROM conversations WHERE sender_id = ? OR receiver_id = ? ORDER BY created_at ASC";
+
+        $conversations = $this->database->query($sql, [$id, $id]);
+
+        $formatted_conversations = [];
+
+        if ($conversations) {
+            foreach ($conversations as $conversation) {
+                if (!isset($formatted_conversations[$id])) {
+                    $formatted_conversations[$id] = [];
+                }
+
+                $formatted_conversations[$id][] = [
+                    "user_id" => $conversation['sender_id'],
+                    "message" => $conversation['message']
+                ];
+            }
+        }
+
+        $this->success = true;
+        $this->message = $formatted_conversations;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_unread_count()
+    {
+        $user_id = post("user_id");
+
+        $unread_messages = count($this->database->select_many("conversations", ["sender_id" => 1, "receiver_id" => $user_id, "read_status" => "unread"]));
+
+        if ($unread_messages) {
+            $this->success = true;
+            $this->message = $unread_messages;
+        }
+
+        $this->response($this->success, $this->message);
+    }
+    
+    private function mark_as_read()
+    {
+        $user_id = post("user_id");
+
+        $data = [
+            "read_status" => "read",
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->update("conversations", $data, ["sender_id" => 1, "receiver_id" => $user_id, "read_status" => "unread"]);
+
+        $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function insert_message()
+    {
+        $sender_id = intval(post("sender_id"));
+        $receiver_id = intval(post("receiver_id"));
+        $message = trim(post("message"));
+
+        $data = [
+            "uuid" => $this->database->generate_uuid(),
+            "sender_id" => $sender_id,
+            "receiver_id" => $receiver_id,
+            "message" => $message,
+            "created_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->insert("conversations", $data);
+
+        $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
     private function logout()
     {
         session("user_id", "unset");

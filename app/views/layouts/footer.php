@@ -1,6 +1,31 @@
-    <?php include_once "../app/views/components/login_modal.php" ?>
-    <?php include_once "../app/views/components/register_modal.php" ?>
-    <?php include_once "../app/views/components/profile_modal.php" ?>
+    <!-- Floating Chat Button -->
+    <button class="chat-button <?= session("user_id") ? null : "d-none" ?>" id="chatButton">
+        💬
+    </button>
+
+    <!-- Chatbox -->
+    <div class="chatbox" id="chatbox">
+        <div class="chatbox-header">
+            Chat with Seller
+            <button class="close" id="closeChatbox" style="background: none; border: none; color: white;">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbox-body" id="chatboxBody">
+            <div class="loading d-flex justify-content-center align-items-center h-100 d-none">
+                <div class="text-center">
+                    <img src="assets/images/loading.webp" alt="Loading GIF" class="mb-3">
+                    <h3 class="text-muted">Loading...</h3>
+                </div>
+            </div>
+        </div>
+        <div class="chatbox-footer">
+            <textarea id="userMessage" class="form-control" rows="1" placeholder="Type your message..."></textarea>
+            <button id="sendMessage" class="btn btn-primary ml-2">
+                <i class="fa fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- ***** Footer Start ***** -->
     <footer>
@@ -57,6 +82,10 @@
         </div>
     </footer>
     <!-- ***** Footer Ends ***** -->
+
+    <?php include_once "../app/views/components/login_modal.php" ?>
+    <?php include_once "../app/views/components/register_modal.php" ?>
+    <?php include_once "../app/views/components/profile_modal.php" ?>
 
     <script>
         var user_id = "<?= session("user_id") ?>";

@@ -16,6 +16,7 @@ class Model
         $this->create_system_updates_table();
         $this->create_newsletter_contacts_table();
         $this->create_contact_messages_table();
+        $this->create_conversations_table();
         $this->insert_admin_data();
     }
 
@@ -96,7 +97,7 @@ class Model
             die("Error creating orders table: " . $this->connection->error);
         }
     }
-    
+
     private function create_system_updates_table()
     {
         $sql = "CREATE TABLE IF NOT EXISTS system_updates (
@@ -112,7 +113,7 @@ class Model
             die("Error creating orders table: " . $this->connection->error);
         }
     }
-    
+
     private function create_newsletter_contacts_table()
     {
         $sql = "CREATE TABLE IF NOT EXISTS newsletter_contacts (
@@ -128,7 +129,7 @@ class Model
             die("Error creating orders table: " . $this->connection->error);
         }
     }
-    
+
     private function create_contact_messages_table()
     {
         $sql = "CREATE TABLE IF NOT EXISTS contact_messages (
@@ -143,6 +144,24 @@ class Model
 
         if (!$this->connection->query($sql) === TRUE) {
             die("Error creating orders table: " . $this->connection->error);
+        }
+    }
+
+    private function create_conversations_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS conversations (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL,
+            sender_id INT(11) NOT NULL,
+            receiver_id INT(11) NOT NULL,
+            message TEXT NOT NULL,
+            read_status ENUM('unread', 'read') DEFAULT 'unread',  -- Add this column for read/unread status
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating conversations table: " . $this->connection->error);
         }
     }
 

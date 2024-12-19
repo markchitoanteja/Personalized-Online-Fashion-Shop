@@ -1,5 +1,9 @@
 jQuery(document).ready(function () {
     const url = new URL(window.location.href);
+    var conversations = [];
+    var is_message_clicked = false;
+
+    check_unread_messages(user_id);
 
     if (url.searchParams.has('fbclid')) {
         url.searchParams.delete('fbclid');
@@ -752,6 +756,241 @@ jQuery(document).ready(function () {
             }
         });
     })
+
+    $("#chatButton").click(function () {
+        $("#chatbox").css("display", "flex");
+        $("#chatButton").hide();
+
+        displayConversation(parseInt(user_id));
+        pollForNewMessages(parseInt(user_id));
+
+        var formData = new FormData();
+
+        formData.append('user_id', user_id);
+        formData.append('action', 'mark_as_read');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    check_unread_messages(user_id);
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    })
+
+    $("#closeChatbox").click(function () {
+        $("#chatbox").css("display", "none");
+        $("#chatButton").show();
+    })
+
+    $('#sendMessage').on('click', function () {
+        const userMessage = $('#userMessage').val().trim();
+        const currentUserID = parseInt(user_id);
+
+        if (userMessage) {
+            const userMessageHtml = `<div class='user-message'>${userMessage}</div>`;
+            $('#chatboxBody').append(userMessageHtml);
+
+            $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
+            $('#userMessage').val('');
+
+            const formData = new FormData();
+
+            formData.append('sender_id', currentUserID);
+            formData.append('receiver_id', 1);
+            formData.append('message', userMessage);
+            formData.append('action', 'insert_message');
+
+            $.ajax({
+                url: 'server',
+                data: formData,
+                type: 'POST',
+                dataType: 'JSON',
+                processData: false,
+                contentType: false,
+                success: function (_) {
+                    // Ignore this line
+                },
+                error: function (_, _, error) {
+                    console.error("Error occurred:", error);
+                }
+            });
+        }
+    })
+
+    $('#userMessage').keydown(function (e) {
+        if (e.which === 13) {
+            if (e.shiftKey) {
+                return;
+            } else {
+                e.preventDefault();
+
+                $("#sendMessage").click();
+                $('#userMessage').val('');
+                $('#userMessage').attr('rows', '1');
+                $('#userMessage').css('height', 'auto');
+            }
+        }
+
+        if (e.which === 27) {
+            $("#closeChatbox").click();
+
+            console.log("test");
+        }
+    })
+
+    $('#userMessage').on('input', function () {
+        const textarea = $(this)[0];
+
+        // Reset height to auto to recalculate
+        textarea.style.height = 'auto';
+
+        // Calculate the new height, capping it at 5 lines
+        const maxHeight = parseFloat(getComputedStyle(textarea).lineHeight) * 5;
+        textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + 'px';
+        textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+
+        // Maintain scroll position at the bottom
+        const chatboxBody = $('#chatboxBody')[0];
+        chatboxBody.scrollTop = chatboxBody.scrollHeight;
+    })
+
+    $('#sendMessage').on('click', function () {
+        const userMessage = $('#userMessage').val().trim();
+        const currentUserID = parseInt(user_id);
+
+        if (userMessage) {
+            const userMessageHtml = `<div class='user-message'>${userMessage}</div>`;
+            $('#chatboxBody').append(userMessageHtml);
+
+            conversations[currentUserID].push({ "user_id": currentUserID, "message": userMessage });
+
+            $('#userMessage').val('');
+            $('#userMessage').css('height', 'auto');
+
+            scrollToBottom();
+        }
+    })
+
+    function check_unread_messages(currentUserID) {
+        let button_html = "";
+
+        var formData = new FormData();
+
+        formData.append('user_id', currentUserID);
+        formData.append('action', 'get_unread_count');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    button_html = `💬 <span class="chat-badge" id="chatBadge">` + response.message + `</span>`;
+                } else {
+                    button_html = `💬`;
+                }
+
+                $("#chatButton").html(button_html);
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function scrollToBottom() {
+        const chatboxBody = $('#chatboxBody')[0];
+        chatboxBody.scrollTop = chatboxBody.scrollHeight;
+    }
+
+    function displayConversation(userID) {
+        $(".loading").removeClass("d-none");
+        $("#userMessage").attr("readonly", true);
+
+        var formData = new FormData();
+
+        formData.append('id', userID);
+        formData.append('action', 'get_conversation_data');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    conversations = response.message;
+
+                    let conversationHtml = '<div class="bot-message">Hello, how can I help you today?</div>'; // Default greeting
+
+                    if (conversations[userID]) {
+                        conversations[userID].forEach(conversation => {
+                            const messageHtml = `<div class="${conversation.user_id === userID ? 'user-message' : 'bot-message'}">${conversation.message}</div>`;
+                            conversationHtml += messageHtml;
+                        });
+                    }
+
+                    $('#chatboxBody').html(conversationHtml);
+                    $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
+
+                    $(".loading").addClass("d-none");
+                    $("#userMessage").removeAttr("readonly");
+
+                    is_message_clicked = true;
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function pollForNewMessages(userID) {
+        setInterval(function () {
+            var formData = new FormData();
+            formData.append('id', userID);
+            formData.append('action', 'get_conversation_data');
+
+            $.ajax({
+                url: 'server',
+                data: formData,
+                type: 'POST',
+                dataType: 'JSON',
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        const newConversations = response.message;
+
+                        if (newConversations[userID] && newConversations[userID].length > conversations[userID]?.length) {
+                            conversations = newConversations;
+
+                            displayConversation(userID);
+                            check_unread_messages(userID);
+                        }
+                    }
+                },
+                error: function (_, _, error) {
+                    console.error(error);
+                }
+            });
+        }, 5000);
+    }
 
     function getCheckedItems() {
         let checkedItems = [];
