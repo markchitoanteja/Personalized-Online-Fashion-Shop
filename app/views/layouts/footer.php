@@ -7,7 +7,7 @@
     <div class="chatbox" id="chatbox">
         <div class="chatbox-header">
             Chat with Seller
-            <button class="close" id="closeChatbox" style="background: none; border: none; color: white;">
+            <button class="close" id="closeChatbox" style="background: none; border: none; color: black;">
                 <i class="fa fa-times"></i>
             </button>
         </div>

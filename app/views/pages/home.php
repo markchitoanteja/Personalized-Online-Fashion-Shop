@@ -15,7 +15,9 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                     <div class="thumb">
                         <div class="inner-content">
                             <h4>We Are Personalized Online Shop</h4>
-                            <span>We offer a custom-tailored shopping experience with curated collections and style recommendations made just for you.</span>
+
+                            <span class="d-lg-block d-none">We offer a custom-tailored shopping experience with curated collections and style recommendations made just for you.</span>
+                            
                             <div class="main-border-button">
                                 <a href="products">Discover More</a>
                             </div>

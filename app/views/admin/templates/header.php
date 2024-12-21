@@ -176,6 +176,12 @@ if (session("user_id")) {
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="customer_messages" class="nav-link <?= session("page") == "admin/customer_messages" ? "active" : null ?>">
+                                <i class="nav-icon fas fa-comment"></i>
+                                <p>Customer Messages</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="javascript:void(0)" class="nav-link logout">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>Logout</p>

@@ -779,6 +779,8 @@ jQuery(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     check_unread_messages(user_id);
+
+                    $("#userMessage").focus();
                 }
             },
             error: function (_, _, error) {
