@@ -30,10 +30,21 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
+                            <?php
+                            $database = new Database;
+                            $cart_items = $database->select_many("orders", ["status" => "Cart", "user_id" => session("user_id")], "AND");
+
+                            function generate_order_id($order_id)
+                            {
+                                return str_pad($order_id, 5, '0', STR_PAD_LEFT);
+                            }
+                            ?>
                             <table class="table table-bordered datatable" id="order_table">
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><input type="checkbox" style="cursor: pointer;"></th>
+                                        <?php if ($cart_items): ?>
+                                            <th class="text-center"><input type="checkbox" style="cursor: pointer;"></th>
+                                        <?php endif ?>
                                         <th class="text-center">Order ID</th>
                                         <th class="text-center">Product Name</th>
                                         <th class="text-center">Quantity</th>
@@ -41,16 +52,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $database = new Database;
-                                    $cart_items = $database->select_many("orders", ["status" => "Cart", "user_id" => session("user_id")], "AND");
-
-                                    function generate_order_id($order_id)
-                                    {
-                                        return str_pad($order_id, 5, '0', STR_PAD_LEFT);
-                                    }
-                                    ?>
-
                                     <?php if ($cart_items): ?>
                                         <?php foreach ($cart_items as $cart_item): ?>
                                             <tr>

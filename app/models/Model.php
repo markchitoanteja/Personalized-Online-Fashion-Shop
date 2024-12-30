@@ -17,7 +17,9 @@ class Model
         $this->create_newsletter_contacts_table();
         $this->create_contact_messages_table();
         $this->create_conversations_table();
+        $this->create_notification_settings_table();
         $this->insert_admin_data();
+        $this->insert_notification_settings_data();
     }
 
     private function create_users_table()
@@ -89,6 +91,7 @@ class Model
             quantity INT UNSIGNED NOT NULL,
             total_price FLOAT(11,2) NOT NULL,
             status VARCHAR(20) DEFAULT 'pending',
+            request_cancel TINYINT DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";
@@ -164,6 +167,21 @@ class Model
             die("Error creating conversations table: " . $this->connection->error);
         }
     }
+    
+    private function create_notification_settings_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS notification_settings (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL,
+            read_status ENUM('unread', 'read') DEFAULT 'unread',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating conversations table: " . $this->connection->error);
+        }
+    }
 
     private function insert_admin_data()
     {
@@ -182,6 +200,22 @@ class Model
             ];
 
             $this->database->insert("users", $data);
+        }
+    }
+    
+    private function insert_notification_settings_data()
+    {
+        $is_data_exists = $this->database->select_one("notification_settings", ["id" => "1"]);
+
+        if (!$is_data_exists) {
+            $data = [
+                "uuid" => $this->database->generate_uuid(),
+                "read_status" => 'read',
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ];
+
+            $this->database->insert("notification_settings", $data);
         }
     }
 }

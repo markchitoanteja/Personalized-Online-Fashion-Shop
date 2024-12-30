@@ -1,9 +1,47 @@
 jQuery(document).ready(function () {
     const url = new URL(window.location.href);
+    const secretKeyCombination = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    const emojis = {
+        smileys: [
+            "😀", "😃", "😄", "😁", "😆", "😊", "😍", "😘", "😋", "😂",
+            "🤣", "😜", "😝", "😛", "🤑", "😎", "🤓", "😏", "😒", "😞"
+        ],
+        animals: [
+            "🐶", "🐱", "🐭", "🐹", "🐰", "🐸", "🦁", "🐯", "🐻", "🐨",
+            "🐷", "🐮", "🐰", "🐻‍❄️", "🦊", "🐦", "🦅", "🦆", "🦢", "🦉"
+        ],
+        foods: [
+            "🍏", "🍎", "🍐", "🍊", "🍋", "🍌", "🍉", "🍇", "🍓", "🍒",
+            "🍓", "🍍", "🍑", "🍈", "🍋", "🥥", "🥝", "🍍", "🍉", "🍇"
+        ],
+        nature: [
+            "🌳", "🌲", "🌵", "🌾", "🌻", "🌼", "🌷", "🌹", "🍀", "🌺",
+            "🌻", "🌲", "🌳", "🌾", "🌻", "🍁", "🍂", "🍃", "🍄", "🌷"
+        ],
+        objects: [
+            "💻", "📱", "🖥️", "🖨️", "⌚", "🖱️", "💡", "📷", "📺", "🎧",
+            "🎤", "🎬", "🖼️", "📸", "📚", "🎮", "🧸", "🎲", "📓", "📝"
+        ],
+        symbols: [
+            "❤️", "💔", "💥", "💫", "✨", "🔥", "💣", "🔔", "🔕", "🎵",
+            "🎶", "🔊", "🔉", "🔆", "📣", "📯", "🔮", "🔗", "🔑", "🗝️"
+        ],
+        activities: [
+            "⚽", "🏀", "🏈", "⚾", "🎾", "🏐", "🏉", "🎱", "🥏", "🏓",
+            "🏸", "🏒", "🏑", "🥅", "⛳", "🏌️‍♂️", "🏇", "🚴‍♂️", "🚴‍♀️", "🚣‍♀️"
+        ],
+        travel: [
+            "🌍", "🌎", "🌏", "✈️", "🚂", "🚗", "🚕", "🚌", "🚎", "🚙",
+            "🚘", "🚖", "🚓", "🚑", "🚒", "🚐", "🚚", "🚛", "🚜", "🛴"
+        ]
+    };
     var conversations = [];
-    var is_message_clicked = false;
+    var keySequence = [];
+    var is_chatbox_open = false;
 
     check_unread_messages(user_id);
+    toggleInspectRestriction(true);
+    populateEmojiList("smileys");
 
     if (url.searchParams.has('fbclid')) {
         url.searchParams.delete('fbclid');
@@ -69,6 +107,7 @@ jQuery(document).ready(function () {
     $("#login_form").submit(function () {
         const username = $("#login_username").val();
         const password = $("#login_password").val();
+        const remember_me = $("#login_remember_me").is(":checked");
 
         $("#login_alert").addClass("d-none");
 
@@ -78,6 +117,7 @@ jQuery(document).ready(function () {
 
         formData.append('username', username);
         formData.append('password', password);
+        formData.append('remember_me', remember_me);
 
         formData.append('action', 'login');
 
@@ -581,7 +621,17 @@ jQuery(document).ready(function () {
 
         $('#order_table tbody input[type="checkbox"]').prop('checked', isChecked);
 
-        if ($('#order_table tbody input[type="checkbox"]:checked').length > 0) {
+        var selected_items = $('#order_table tbody input[type="checkbox"]:checked').length;
+
+        if (selected_items > 0) {
+            if (selected_items > 1) {
+                $("#place_order").html('<i class="fa fa-shopping-cart mr-1"></i> Place Orders');
+                $("#delete_order").html('<i class="fa fa-trash mr-1"></i> Delete Orders');
+            } else {
+                $("#place_order").html('<i class="fa fa-shopping-cart mr-1"></i> Place Order');
+                $("#delete_order").html('<i class="fa fa-trash mr-1"></i> Delete Order');
+            }
+
             $("#place_order").removeClass("d-none");
             $("#delete_order").removeClass("d-none");
         } else {
@@ -595,7 +645,17 @@ jQuery(document).ready(function () {
 
         $('#order_table thead input[type="checkbox"]').prop('checked', allChecked);
 
-        if ($('#order_table tbody input[type="checkbox"]:checked').length > 0) {
+        var selected_items = $('#order_table tbody input[type="checkbox"]:checked').length;
+
+        if (selected_items > 0) {
+            if (selected_items > 1) {
+                $("#place_order").html('<i class="fa fa-shopping-cart mr-1"></i> Place Orders');
+                $("#delete_order").html('<i class="fa fa-trash mr-1"></i> Delete Orders');
+            } else {
+                $("#place_order").html('<i class="fa fa-shopping-cart mr-1"></i> Place Order');
+                $("#delete_order").html('<i class="fa fa-trash mr-1"></i> Delete Order');
+            }
+
             $("#place_order").removeClass("d-none");
             $("#delete_order").removeClass("d-none");
         } else {
@@ -757,39 +817,100 @@ jQuery(document).ready(function () {
         });
     })
 
+    $('#placed_order_table thead input[type="checkbox"]').on('change', function () {
+        var isChecked = $(this).is(':checked');
+
+        $('#placed_order_table tbody input[type="checkbox"]').prop('checked', isChecked);
+
+        var selected_items = $('#placed_order_table tbody input[type="checkbox"]:checked').length;
+
+        if (selected_items > 0) {
+            if (selected_items > 1) {
+                $("#cancel_order").html('<i class="fa fa-trash mr-1"></i> Cancel Orders');
+            } else {
+                $("#cancel_order").html('<i class="fa fa-trash mr-1"></i> Cancel Order');
+            }
+
+            $("#cancel_order").removeClass("d-none");
+        } else {
+            $("#cancel_order").addClass("d-none");
+        }
+    })
+
+    $('#placed_order_table tbody input[type="checkbox"]').on('change', function () {
+        var allChecked = $('#placed_order_table tbody input[type="checkbox"]').length === $('#placed_order_table tbody input[type="checkbox"]:checked').length;
+
+        $('#placed_order_table thead input[type="checkbox"]').prop('checked', allChecked);
+
+        var selected_items = $('#placed_order_table tbody input[type="checkbox"]:checked').length;
+
+        if (selected_items > 0) {
+            if (selected_items > 1) {
+                $("#cancel_order").html('<i class="fa fa-trash mr-1"></i> Cancel Orders');
+            } else {
+                $("#cancel_order").html('<i class="fa fa-trash mr-1"></i> Cancel Order');
+            }
+
+            $("#cancel_order").removeClass("d-none");
+        } else {
+            $("#cancel_order").addClass("d-none");
+        }
+    })
+
+    $("#cancel_order").click(function () {
+        let selectedItems = getCheckedPlacedItems();
+        let orderIds = selectedItems.map(item => item.order_id);
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, cancel it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData();
+
+                formData.append('action', 'cancel_orders');
+                formData.append('order_ids', JSON.stringify(orderIds));
+
+                $.ajax({
+                    url: '../server',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error("Error: ", error);
+                    }
+                });
+            }
+        });
+    })
+
     $("#chatButton").click(function () {
+        markAsRead(parseInt(user_id));
+
+        is_chatbox_open = true;
+
         $("#chatbox").css("display", "flex");
         $("#chatButton").hide();
 
         displayConversation(parseInt(user_id));
         pollForNewMessages(parseInt(user_id));
-
-        var formData = new FormData();
-
-        formData.append('user_id', user_id);
-        formData.append('action', 'mark_as_read');
-
-        $.ajax({
-            url: 'server',
-            data: formData,
-            type: 'POST',
-            dataType: 'JSON',
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                if (response.success) {
-                    check_unread_messages(user_id);
-
-                    $("#userMessage").focus();
-                }
-            },
-            error: function (_, _, error) {
-                console.error(error);
-            }
-        });
     })
 
     $("#closeChatbox").click(function () {
+        is_chatbox_open = false;
+
         $("#chatbox").css("display", "none");
         $("#chatButton").show();
     })
@@ -799,11 +920,18 @@ jQuery(document).ready(function () {
         const currentUserID = parseInt(user_id);
 
         if (userMessage) {
-            const userMessageHtml = `<div class='user-message'>${userMessage}</div>`;
-            $('#chatboxBody').append(userMessageHtml);
-
             $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
             $('#userMessage').val('');
+
+            const loadingMessageHtml = `
+                <div class="user-message">
+                    <p>Sending message...</p>
+                </div>
+            `;
+
+            $("#chatboxBody").append(loadingMessageHtml);
+
+            scrollToBottom();
 
             const formData = new FormData();
 
@@ -819,8 +947,14 @@ jQuery(document).ready(function () {
                 dataType: 'JSON',
                 processData: false,
                 contentType: false,
-                success: function (_) {
-                    // Ignore this line
+                success: function (response) {
+                    if (response.success) {
+                        $('#userMessage').val('');
+                        $('#userMessage').attr('rows', '1');
+                        $('#userMessage').css('height', 'auto');
+
+                        displayConversation(currentUserID);
+                    }
                 },
                 error: function (_, _, error) {
                     console.error("Error occurred:", error);
@@ -845,51 +979,73 @@ jQuery(document).ready(function () {
 
         if (e.which === 27) {
             $("#closeChatbox").click();
-
-            console.log("test");
         }
     })
 
     $('#userMessage').on('input', function () {
         const textarea = $(this)[0];
 
-        // Reset height to auto to recalculate
         textarea.style.height = 'auto';
 
-        // Calculate the new height, capping it at 5 lines
         const maxHeight = parseFloat(getComputedStyle(textarea).lineHeight) * 5;
+
         textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + 'px';
         textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
 
-        // Maintain scroll position at the bottom
         const chatboxBody = $('#chatboxBody')[0];
         chatboxBody.scrollTop = chatboxBody.scrollHeight;
     })
 
-    $('#sendMessage').on('click', function () {
-        const userMessage = $('#userMessage').val().trim();
-        const currentUserID = parseInt(user_id);
+    $('#sendImage').click(function () {
+        $('#imageInput').trigger('click');
+    })
 
-        if (userMessage) {
-            const userMessageHtml = `<div class='user-message'>${userMessage}</div>`;
-            $('#chatboxBody').append(userMessageHtml);
+    $('#imageInput').change(function (event) {
+        const file = event.target.files[0];
 
-            conversations[currentUserID].push({ "user_id": currentUserID, "message": userMessage });
-
-            $('#userMessage').val('');
-            $('#userMessage').css('height', 'auto');
-
-            scrollToBottom();
+        if (file) {
+            sendImage(file);
         }
     })
 
-    function check_unread_messages(currentUserID) {
-        let button_html = "";
+    $('#userMessage').on('paste', function (event) {
+        const clipboardData = event.originalEvent.clipboardData || window.clipboardData;
+        const items = clipboardData.items;
 
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            if (item.type.indexOf('image') !== -1) {
+                const file = item.getAsFile();
+                if (file) {
+                    sendImage(file);
+                }
+                event.preventDefault();
+                break;
+            }
+        }
+    })
+
+    $("#addEmoji").on("click", function () {
+        const emojiPicker = $("#emojiPicker");
+        emojiPicker.toggle();
+    })
+
+    $(".emoji-category").on("click", function () {
+        const category = $(this).data("category");
+        populateEmojiList(category);
+    })
+
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest("#emojiPicker").length && !$(e.target).closest("#addEmoji").length) {
+            $("#emojiPicker").hide();
+        }
+    })
+
+    function markAsRead(currentUserID) {
         var formData = new FormData();
 
         formData.append('user_id', currentUserID);
-        formData.append('action', 'get_unread_count');
+        formData.append('action', 'mark_as_read');
 
         $.ajax({
             url: 'server',
@@ -900,12 +1056,8 @@ jQuery(document).ready(function () {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    button_html = `💬 <span class="chat-badge" id="chatBadge">` + response.message + `</span>`;
-                } else {
-                    button_html = `💬`;
+                    $("#userMessage").focus();
                 }
-
-                $("#chatButton").html(button_html);
             },
             error: function (_, _, error) {
                 console.error(error);
@@ -913,9 +1065,145 @@ jQuery(document).ready(function () {
         });
     }
 
+    function populateEmojiList(category) {
+        const emojiListContainer = $("#emojiList");
+        emojiListContainer.empty();
+
+        emojis[category].forEach(function (emoji) {
+            const emojiSpan = $("<span style='cursor: pointer;'>").text(emoji);
+
+            emojiSpan.on("click", function () {
+                insertEmoji(emoji);
+            });
+            emojiListContainer.append(emojiSpan);
+        });
+    }
+
+    function insertEmoji(emoji) {
+        const userMessage = $("#userMessage");
+        const cursorPosition = userMessage[0].selectionStart;
+        const text = userMessage.val();
+        userMessage.val(text.slice(0, cursorPosition) + emoji + text.slice(cursorPosition));
+        userMessage.focus();
+        $("#emojiPicker").hide();
+    }
+
+    function sendImage(file) {
+        const userMessage = $('#userMessage').val().trim();
+
+        const loadingMessageHtml = `
+            <div class="user-message">
+                <p>Uploading image...</p>
+            </div>
+        `;
+
+        $("#chatboxBody").append(loadingMessageHtml);
+
+        scrollToBottom();
+
+        var formData = new FormData();
+
+        formData.append('sender_id', parseInt(user_id));
+        formData.append('receiver_id', 1);
+        formData.append('message', userMessage);
+        formData.append('action', 'insert_message');
+        formData.append('image', file);
+
+        $.ajax({
+            url: 'server',
+            type: 'POST',
+            data: formData,
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (_) {
+                displayConversation(parseInt(user_id));
+
+                $('#userMessage').val('');
+            },
+            error: function (_, _, error) {
+                console.error("Error occurred while sending the image:", error);
+            }
+        });
+    }
+
     function scrollToBottom() {
         const chatboxBody = $('#chatboxBody')[0];
+
         chatboxBody.scrollTop = chatboxBody.scrollHeight;
+    }
+
+    function toggleInspectRestriction(enable) {
+        if (enable) {
+            $(document).on("contextmenu", function (e) {
+                e.preventDefault();
+            });
+
+            $(document).on("keydown", function (e) {
+                if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.shiftKey && e.keyCode === 74) || (e.ctrlKey && e.keyCode === 85)) {
+                    e.preventDefault();
+                }
+            });
+
+            $(document).on("keydown", secretKeyListener);
+        } else {
+            $(document).off("contextmenu");
+            $(document).off("keydown");
+            $(document).off("keydown", secretKeyListener);
+        }
+    }
+
+    function secretKeyListener(e) {
+        keySequence.push(e.keyCode);
+        if (keySequence.length > secretKeyCombination.length) {
+            keySequence.shift();
+        }
+
+        if (JSON.stringify(keySequence) === JSON.stringify(secretKeyCombination)) {
+            toggleInspectRestriction(false);
+
+            Swal.fire({
+                title: "Success!",
+                text: "Secret combination detected! Restrictions removed.",
+                icon: "success"
+            });
+        }
+    }
+
+    function check_unread_messages(currentUserID) {
+        setInterval(() => {
+            if (!is_chatbox_open) {
+                let button_html = "";
+
+                var formData = new FormData();
+
+                formData.append('user_id', currentUserID);
+                formData.append('action', 'get_unread_count');
+
+                $.ajax({
+                    url: 'server',
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            button_html = `💬 <span class="chat-badge" id="chatBadge">` + response.message + `</span>`;
+                        } else {
+                            button_html = `💬`;
+                        }
+
+                        $("#chatButton").html(button_html);
+                    },
+                    error: function (_, _, error) {
+                        console.error(error);
+                    }
+                });
+            } else {
+                markAsRead(parseInt(user_id));
+            }
+        }, 1000);
     }
 
     function displayConversation(userID) {
@@ -942,13 +1230,80 @@ jQuery(document).ready(function () {
 
                     if (conversations[userID]) {
                         conversations[userID].forEach(conversation => {
-                            const messageHtml = `<div class="${conversation.user_id === userID ? 'user-message' : 'bot-message'}">${conversation.message}</div>`;
+                            let messageHtml = '';
+
+                            const isCurrentUser = conversation.user_id === userID;
+
+                            if (isImageUrl(conversation.message)) {
+                                messageHtml = `<div class="${isCurrentUser ? 'user-message' : 'bot-message'} position-relative">
+                                    ${isCurrentUser ? `
+                                    <div class="message-options">
+                                        <i class="fa fa-ellipsis-h message-ellipsis"></i>
+                                        <div class="message-menu popup-balloon d-none">
+                                            <ul class="list-unstyled mb-0">
+                                                <li><button class="btn btn-link text-danger unsend-message" data-message-id="${conversation.id}">Unsend</button></li>
+                                                <li><button class="btn btn-link text-muted no-function" disabled>Forward</button></li>
+                                                <li><button class="btn btn-link text-muted no-function" disabled>Pin</button></li>
+                                            </ul>
+                                        </div>
+                                    </div>` : ''}
+                                    <img src="uploads/conversations/${conversation.message}" alt="Image" class="message-image" style="max-width: 100%; cursor: ${isCurrentUser ? 'pointer' : 'default'};">
+                                </div>`;
+                            } else {
+                                messageHtml = `
+                                    <div class="${isCurrentUser ? 'user-message' : 'bot-message'} position-relative">
+                                        ${isCurrentUser ? ` 
+                                        <div class="message-options">
+                                            <i class="fa fa-ellipsis-h message-ellipsis"></i>
+                                            <div class="message-menu popup-balloon d-none">
+                                                <ul class="list-unstyled mb-0">
+                                                    <li><button class="btn btn-link text-danger unsend-message" data-message-id="${conversation.id}">Unsend</button></li>
+                                                    <li><button class="btn btn-link text-muted no-function" disabled>Forward</button></li>
+                                                    <li><button class="btn btn-link text-muted no-function" disabled>Pin</button></li>
+                                                </ul>
+                                            </div>
+                                        </div>` : ''}
+                                        
+                                        <div class="message-text" style="white-space: pre-wrap;">${conversation.message.replace(/\n/g, '<br>')}</div>
+                                    </div>
+                                `;
+
+                            }
+
                             conversationHtml += messageHtml;
                         });
                     }
 
                     $('#chatboxBody').html(conversationHtml);
-                    $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
+
+                    // Use setTimeout to ensure that the images (if any) are fully loaded before scrolling
+                    setTimeout(function () {
+                        $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
+                    }, 100); // Adding a small delay to ensure the content has loaded before scrolling
+
+                    // Attach click event for images
+                    $('.message-image').on('click', function () {
+                        const imageSrc = $(this).attr('src');
+                        showFullScreenImage(imageSrc);
+                    });
+
+                    // Toggle message menu on ellipsis click
+                    $('.message-ellipsis').on('click', function (e) {
+                        e.stopPropagation(); // Prevent click event from propagating
+                        $('.message-menu').addClass('d-none'); // Close other menus
+                        $(this).siblings('.message-menu').toggleClass('d-none');
+                    });
+
+                    // Close message menu when clicking outside
+                    $(document).on('click', function () {
+                        $('.message-menu').addClass('d-none');
+                    });
+
+                    // Unsend message
+                    $('.unsend-message').on('click', function () {
+                        const messageId = $(this).data('message-id');
+                        deleteMessage(messageId);
+                    });
 
                     $(".loading").addClass("d-none");
                     $("#userMessage").removeAttr("readonly");
@@ -960,6 +1315,69 @@ jQuery(document).ready(function () {
                 console.error(error);
             }
         });
+    }
+
+    function deleteMessage(messageId) {
+        var formData = new FormData();
+
+        formData.append('action', 'delete_message');
+        formData.append('message_id', messageId);
+
+        $.ajax({
+            url: 'server',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+            success: function (response) {
+                if (response.success) {
+                    displayConversation(parseInt(user_id));
+                }
+            },
+            error: function (_, _, error) {
+                console.error('Error deleting message:', error);
+            }
+        });
+    }
+
+    function showFullScreenImage(imageSrc) {
+        const fullScreenContainer = $(`
+            <div id="fullScreenContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; overflow: hidden;"></div>
+        `);
+
+        const fullScreenImage = $(`
+            <img src="${imageSrc}" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+        `);
+
+        const closeButton = $(`
+            <button style="position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.7); border: none; padding: 15px; cursor: pointer; font-size: 24px; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center;">
+                <i class="fa fa-times"></i>
+            </button>
+        `);
+
+        const downloadButton = $(`
+            <a href="${imageSrc}" download style="position: absolute; bottom: 20px; right: 20px; background: rgba(255, 255, 255, 0.7); border: none; padding: 10px 15px; cursor: pointer; font-size: 18px; border-radius: 50%; text-decoration: none; color: #000; display: flex; align-items: center; justify-content: center; width: 50px; height: 50px;">
+                <i class="fa fa-download"></i>
+            </a>
+        `);
+
+        fullScreenContainer.append(fullScreenImage, closeButton, downloadButton);
+        $('body').append(fullScreenContainer);
+
+        closeButton.click(() => fullScreenContainer.remove());
+
+        fullScreenContainer.click(function (e) {
+            if (e.target === fullScreenContainer[0]) {
+                fullScreenContainer.remove();
+            }
+        });
+    }
+
+    function isImageUrl(url) {
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'];
+        const fileExtension = url.split('.').pop().toLowerCase();
+        return imageExtensions.includes(fileExtension);
     }
 
     function pollForNewMessages(userID) {
@@ -983,7 +1401,6 @@ jQuery(document).ready(function () {
                             conversations = newConversations;
 
                             displayConversation(userID);
-                            check_unread_messages(userID);
                         }
                     }
                 },
@@ -998,6 +1415,19 @@ jQuery(document).ready(function () {
         let checkedItems = [];
 
         $('#order_table tbody input[type="checkbox"]:checked').each(function () {
+            let row = $(this).closest('tr');
+            let order_id = row.find('td:nth-child(2)').attr("order_id");
+
+            checkedItems.push({ order_id: order_id });
+        });
+
+        return checkedItems;
+    }
+
+    function getCheckedPlacedItems() {
+        let checkedItems = [];
+
+        $('#placed_order_table tbody input[type="checkbox"]:checked').each(function () {
             let row = $(this).closest('tr');
             let order_id = row.find('td:nth-child(2)').attr("order_id");
 

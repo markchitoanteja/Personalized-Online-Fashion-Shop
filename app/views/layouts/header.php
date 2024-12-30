@@ -108,7 +108,7 @@ if (in_array(session("page"), ["cart", "orders"]) && !session("user_id")) {
                                     <ul>
                                         <li><a href="javascript:void(0)" class="profile">Profile</a></li>
                                         <li><a href="cart" class="<?= session("page") == "cart" ? "bg-white" : null ?>">Cart <span class="badge badge-danger badge-pill ml-3 <?= $cart ? null : "d-none" ?>" id="cart"><?= $cart ?></span></a></li>
-                                        <li><a href="javascript:void(0)" class="no-function">Orders <span class="badge badge-danger badge-pill ml-3 <?= $placed ? null : "d-none" ?>" id="placed"><?= $placed ?></span></a></li>
+                                        <li><a href="orders">Orders <span class="badge badge-danger badge-pill ml-3 <?= $placed ? null : "d-none" ?>" id="placed"><?= $placed ?></span></a></li>
                                         <li><a href="javascript:void(0)" class="logout">Logout</a></li>
                                     </ul>
                                 </li>

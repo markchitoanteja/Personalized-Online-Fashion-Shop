@@ -1,4 +1,6 @@
 jQuery(document).ready(function () {
+    var unread_message_count = 0;
+
     if (notification) {
         Swal.fire({
             title: notification.title,
@@ -27,6 +29,33 @@ jQuery(document).ready(function () {
             }
         });
     }
+
+    if (page == "admin/customer_messages") {
+        var formData = new FormData();
+
+        formData.append('action', 'update_notification_settings');
+
+        $.ajax({
+            url: '../server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                unread_message_count = response.message;
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    check_unread_messages();
+
+    setInterval(() => {
+        check_unread_messages();
+    }, 1000);
 
     $(".datatable").DataTable({
         "paging": true,
@@ -480,6 +509,143 @@ jQuery(document).ready(function () {
             }
         });
     })
+
+    $(".admin_reply").click(function () {
+        const id = $(this).attr("conversation_id");
+
+        $(this).closest("tr").removeClass("text-bold");
+
+        is_loading(true, "reply");
+
+        $("#reply_modal").modal("show");
+
+        var formData = new FormData();
+
+        formData.append('action', 'get_conversation_data_with_user');
+        formData.append('id', id);
+
+        $.ajax({
+            url: '../server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    const conversation_data = response.message;
+
+                    $("#reply_id").val(conversation_data.id);
+                    $("#reply_receiver_id").val(conversation_data.sender_id);
+                    $("#reply_name").text(conversation_data.name);
+                    $("#reply_name_header").text(conversation_data.name);
+                    $("#reply_created_at").text(format_date(conversation_data.created_at));
+
+                    const basePath = "../uploads/conversations/";
+
+                    if (conversation_data.message.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                        $("#reply_message").html(
+                            `<img src="${basePath + conversation_data.message}" alt="Conversation Image" class="img-fluid rounded">`
+                        );
+                    } else {
+                        $("#reply_message").text(conversation_data.message);
+                    }
+
+                    is_loading(false, "reply");
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    })
+
+    $("#reply_submit").click(function () {
+        const id = $("#reply_id").val();
+        const receiver_id = $("#reply_receiver_id").val();
+        const message = $("#reply_message_send").val();
+
+        is_loading(true, "reply");
+
+        var formData = new FormData();
+
+        formData.append('id', id);
+        formData.append('receiver_id', receiver_id);
+        formData.append('message', message);
+
+        formData.append('action', 'reply_to_conversation');
+
+        $.ajax({
+            url: '../server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    })
+
+    function format_date(inputDate) {
+        const date = new Date(inputDate);
+
+        if (isNaN(date.getTime())) {
+            return "Invalid date";
+        }
+
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        };
+
+        return date.toLocaleString('en-US', options);
+    }
+
+    function check_unread_messages() {
+        var formData = new FormData();
+
+        formData.append('action', 'check_unread_messages');
+
+        $.ajax({
+            url: '../server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                const read_status = response.message.read_status;
+                const unread_messages = response.message.unread_messages - unread_message_count;
+
+                if (read_status == "unread") {
+                    if (page == "admin/customer_messages") {
+                        const message = unread_messages > 1 ? "Messages" : "Message";
+
+                        $("#new_message_header").removeClass("d-none");
+
+                        $("#new_message_header_text").text(unread_messages + " New " + message + " (Click to Reload Page)");
+                    } else {
+                        $("#new_message_badge").text(unread_messages);
+                        $("#new_message_badge").removeClass("d-none");
+                    }
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    }
 
     function is_loading(state, modal_name) {
         if (typeof state !== 'boolean') {

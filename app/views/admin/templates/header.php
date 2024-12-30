@@ -85,12 +85,17 @@ if (session("user_id")) {
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="javascript:void(0)" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
 
             <ul class="navbar-nav ml-auto">
                 <?php if (session("user_type") == "admin"): ?>
+                    <?php if (session("page") == "admin/customer_messages"): ?>
+                        <li class="nav-item d-none" id="new_message_header">
+                            <a class="nav-link" href="customer_messages" role="button"><small class="text-danger text-bold" id="new_message_header_text">New Message (Click to Reload Page)</small></a>
+                        </li>
+                    <?php endif ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)">
                             <i class="far fa-bell"></i>
@@ -178,7 +183,7 @@ if (session("user_id")) {
                         <li class="nav-item">
                             <a href="customer_messages" class="nav-link <?= session("page") == "admin/customer_messages" ? "active" : null ?>">
                                 <i class="nav-icon fas fa-comment"></i>
-                                <p>Customer Messages</p>
+                                <p>Customer Chats <span class="badge badge-pill badge-danger float-right d-none" id="new_message_badge">3</span></p>
                             </a>
                         </li>
                         <li class="nav-item">

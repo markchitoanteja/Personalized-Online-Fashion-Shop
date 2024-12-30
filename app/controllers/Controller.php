@@ -22,6 +22,7 @@ class Controller
     {
         $username = post("username");
         $password = post("password");
+        $remember_me = post("remember_me");
 
         $user_data = $this->database->select_one("users", ["username" => $username]);
 
@@ -29,6 +30,16 @@ class Controller
             $hash = $user_data["password"];
 
             if (password_verify($password, $hash)) {
+                if ($remember_me == "true") {
+                    session("remember_me", true);
+                    session("remember_me_username", $username);
+                    session("remember_me_password", $password);
+                } else {
+                    session("remember_me", false);
+                    session("remember_me_username", "unset");
+                    session("remember_me_password", "unset");
+                }
+
                 session("user_id", $user_data["id"]);
                 session("user_type", $user_data["user_type"]);
 
@@ -604,6 +615,32 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
+    private function cancel_orders()
+    {
+        $order_ids = isset($_POST['order_ids']) ? json_decode($_POST['order_ids'], true) : [];
+
+        foreach ($order_ids as $order_id) {
+            $data = [
+                "request_cancel" => 1,
+                "updated_at" => date("Y-m-d H:i:s"),
+            ];
+
+            $this->database->update("orders", $data, ["id" => $order_id]);
+        }
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "Selected orders has been requested for cancel.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
     private function place_orders()
     {
         $order_ids = explode(",", post("order_ids"));
@@ -647,6 +684,7 @@ class Controller
                 }
 
                 $formatted_conversations[$id][] = [
+                    "id" => $conversation['id'],
                     "user_id" => $conversation['sender_id'],
                     "message" => $conversation['message']
                 ];
@@ -672,7 +710,7 @@ class Controller
 
         $this->response($this->success, $this->message);
     }
-    
+
     private function mark_as_read()
     {
         $user_id = post("user_id");
@@ -694,6 +732,109 @@ class Controller
         $sender_id = intval(post("sender_id"));
         $receiver_id = intval(post("receiver_id"));
         $message = trim(post("message"));
+        $image_url = null;
+
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadResult = upload("image", "uploads/conversations");
+
+            if ($uploadResult) {
+                $image_url = $uploadResult;
+            } else {
+                $this->response(false, "Image upload failed.");
+                return;
+            }
+        }
+
+        if ($image_url === null) {
+            $image_url = $message;
+        }
+
+        $data = [
+            "uuid" => $this->database->generate_uuid(),
+            "sender_id" => $sender_id,
+            "receiver_id" => $receiver_id,
+            "message" => $image_url,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $notification_settings_data = [
+            "read_status" => "unread",
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->insert("conversations", $data);
+        $this->database->update("notification_settings", $notification_settings_data, ["id" => 1]);
+
+        $this->success = true;
+        $this->response($this->success, "Message sent successfully.");
+    }
+
+    private function delete_message()
+    {
+        $message_id = post("message_id");
+
+        $this->database->delete("conversations", ["id" => $message_id]);
+
+        $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function update_notification_settings()
+    {
+        $sql = "SELECT id FROM conversations WHERE sender_id != 1 AND read_status = 'unread' ORDER BY id DESC";
+        $unread_messages = count($this->database->query($sql));
+
+        $data = [
+            "read_status" => "read",
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->update("notification_settings", $data, ["id" => 1]);
+
+        $this->success = true;
+        $this->response($this->success, $unread_messages);
+    }
+
+    private function check_unread_messages()
+    {
+        $read_status = $this->database->select_one("notification_settings", ["id" => 1])["read_status"];
+
+        $sql = "SELECT id FROM conversations WHERE sender_id != 1 AND read_status = 'unread' ORDER BY id DESC";
+        $unread_messages = count($this->database->query($sql));
+
+        $this->message = [
+            "read_status" => $read_status,
+            "unread_messages" => $unread_messages,
+        ];
+
+        $this->success = true;
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_conversation_data_with_user()
+    {
+        $id = post("id");
+
+        $conversation_data = $this->database->select_one("conversations", ["id" => $id]);
+        $user_name = $this->database->select_one("users", ["id" => $conversation_data["sender_id"]])["name"];
+
+        $this->database->update("conversations", ["read_status" => "read"], ["id" => $id]);
+
+        $conversation_data["name"] = $user_name;
+
+        $this->success = true;
+        $this->message = $conversation_data;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function reply_to_conversation()
+    {
+        $sender_id = 1;
+        $receiver_id = post("receiver_id");
+        $message = post("message");
 
         $data = [
             "uuid" => $this->database->generate_uuid(),
@@ -701,9 +842,18 @@ class Controller
             "receiver_id" => $receiver_id,
             "message" => $message,
             "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
         ];
 
         $this->database->insert("conversations", $data);
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "Message sent successfully.",
+            "icon" => "success",
+        ];
+
+        session("notification", $notification_message);
 
         $this->success = true;
 

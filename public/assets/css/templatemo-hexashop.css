@@ -2678,3 +2678,103 @@ responsive
     font-size: 26px;
   }
 }
+
+.message-options {
+  position: absolute;
+  top: 10px;
+  left: -30px;
+}
+
+.message-ellipsis {
+  cursor: pointer;
+  font-size: 18px;
+  color: #6c757d;
+}
+
+.message-menu.popup-balloon {
+  position: absolute;
+  top: auto;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.message-menu:before {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+.message-menu ul {
+  margin: 0;
+  padding: 0;
+}
+
+.message-menu li {
+  list-style: none;
+  margin: 5px 0;
+}
+
+.message-menu .btn-link {
+  text-decoration: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.message-menu .btn-link.text-danger {
+  color: #dc3545;
+}
+
+.message-menu .btn-link.text-muted {
+  color: #6c757d;
+}
+
+.emoji-category {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.emoji-category:hover {
+  background-color: #ddd;
+}
+
+#emoji-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+  gap: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#emoji-container button {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#emoji-container button:hover {
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+.remember_me_checkbox {
+  cursor: pointer;
+}

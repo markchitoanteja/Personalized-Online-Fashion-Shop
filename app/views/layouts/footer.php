@@ -19,11 +19,45 @@
                 </div>
             </div>
         </div>
-        <div class="chatbox-footer">
-            <textarea id="userMessage" class="form-control" rows="1" placeholder="Type your message..."></textarea>
-            <button id="sendMessage" class="btn btn-primary ml-2">
-                <i class="fa fa-paper-plane"></i>
+        <div class="chatbox-footer d-flex align-items-center p-2" style="background-color: #f5f5f5; border-top: 1px solid #ddd;">
+            <!-- Send Image -->
+            <button title="Attact an image" id="sendImage" class="btn btn-link p-0 mr-2" style="font-size: 1.25rem; color: #888;">
+                <i class="fa fa-camera"></i>
             </button>
+
+            <!-- Text Input -->
+            <textarea id="userMessage" class="form-control flex-grow-1" rows="1" placeholder="Aa" style="resize: none; border-radius: 20px; border: 1px solid #ccc; padding: 8px 12px; padding-right:30px;"></textarea>
+
+            <!-- Add Emoji or Attachments -->
+            <button title="Choose an emoji" id="addEmoji" class="btn btn-link p-0" style="margin-left: -30px; font-size: 1.25rem; color: #888;">
+                <i class="fa fa-smile-o"></i>
+            </button>
+
+            <!-- Send Message -->
+            <button id="sendMessage" class="ml-3 btn btn-primary rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
+                <i class="fa fa-paper-plane" style="font-size: 1rem;"></i>
+            </button>
+
+            <!-- Hidden Image Input -->
+            <input type="file" id="imageInput" accept="image/*" style="display:none;">
+
+            <!-- Emoji Picker -->
+            <div id="emojiPicker" class="emoji-picker" style="display: none; position: absolute; bottom: 60px; left: 10px; z-index: 1000; border: 1px solid #ddd; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+                <!-- Category buttons -->
+                <div class="emoji-categories" style="display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid #ddd;">
+                    <button class="emoji-category" data-category="smileys">Smileys</button>
+                    <button class="emoji-category" data-category="animals">Animals</button>
+                    <button class="emoji-category" data-category="foods">Foods</button>
+                    <button class="emoji-category" data-category="nature">Nature</button>
+                    <button class="emoji-category" data-category="objects">Objects</button>
+                    <button class="emoji-category" data-category="symbols">Symbols</button>
+                    <button class="emoji-category" data-category="activities">Activities</button>
+                    <button class="emoji-category" data-category="travel">Travel</button>
+                </div>
+
+                <!-- Emoji list will be populated dynamically based on selected category -->
+                <div id="emojiList" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px;"></div>
+            </div>
         </div>
     </div>
 
