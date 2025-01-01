@@ -5,7 +5,7 @@
             <div class="col-lg-12">
                 <div class="inner-content">
                     <h2>My Orders</h2>
-                    <span>Review the items you've added, adjust quantities, or proceed to checkout for a seamless shopping experience.</span>
+                    <span>Track your purchases, view order details, and stay updated on your delivery status effortlessly.</span>
                 </div>
             </div>
         </div>
@@ -31,8 +31,18 @@
                         <div class="table-responsive">
                             <?php
                             $database = new Database;
-                            $sql = "SELECT * FROM orders WHERE status!='CART' AND user_id='" . session("user_id") . "'";
+                            $sql = "SELECT * FROM orders WHERE status != 'Cart' AND user_id = '" . session("user_id") . "' ORDER BY id DESC";
                             $orders = $database->query($sql);
+
+                            $placed_count = 0;
+
+                            if ($orders) {
+                                foreach ($orders as $order) {
+                                    if ($order["status"] == "Placed" && !$order["request_cancel"]) {
+                                        $placed_count++;
+                                    }
+                                }
+                            }
 
                             function generate_order_id($order_id)
                             {
@@ -42,8 +52,8 @@
                             <table class="table table-bordered datatable" id="placed_order_table">
                                 <thead>
                                     <tr>
-                                        <?php if ($orders): ?>
-                                            <th class="text-center"><input type="checkbox" style="cursor: pointer;"></th>
+                                        <?php if ($orders && $placed_count != 0): ?>
+                                            <th class="text-center"><input type="checkbox" style="cursor: pointer;" title="Select All Orders"></th>
                                         <?php endif ?>
                                         <th class="text-center">Order ID</th>
                                         <th class="text-center">Product Name</th>
@@ -60,11 +70,14 @@
                                                 case "Placed":
                                                     $status_color = "text-primary";
                                                     break;
+                                                case "Completed":
+                                                    $status_color = "text-success";
+                                                    break;
                                                 case "Cancelled":
                                                     $status_color = "text-danger";
                                                     break;
                                                 default:
-                                                    $status_color = "text-muted";
+                                                    $status_color = "text-info";
                                                     break;
                                             }
 
@@ -73,11 +86,13 @@
                                             }
                                             ?>
                                             <tr>
-                                                <td class="text-center"><input type="<?= $order["request_cancel"] ? "hidden" : "checkbox" ?>" style="cursor: pointer;"></td>
+                                                <?php if ($placed_count != 0): ?>
+                                                    <td class="text-center"><input type="<?= $order["status"] == "Placed" && !$order["request_cancel"] ? "checkbox" : "hidden" ?>" style="cursor: pointer;"></td>
+                                                <?php endif ?>
                                                 <td class="text-center" order_id="<?= $order["id"] ?>">#<?= generate_order_id($order["id"]) ?></td>
                                                 <td class="text-center"><?= $database->select_one("products", ["id" => $order["product_id"]])["name"] ?></td>
                                                 <td class="text-center"><?= $order["quantity"] ?> Item<?= $order["quantity"] > 1 ? "s" : null ?></td>
-                                                <td class="text-center">₱<?= number_format($order["total_price"], 2) ?></td>
+                                                <td class="text-center"><i class="fa fa-peso-sign"></i> <?= number_format($order["total_price"], 2) ?></td>
                                                 <td class="text-center <?= $status_color ?>"><?= !$order["request_cancel"] ? $order["status"] : "Cancel Pending" ?></td>
                                             </tr>
                                         <?php endforeach ?>

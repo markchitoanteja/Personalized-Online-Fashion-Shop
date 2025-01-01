@@ -26,7 +26,12 @@
                         </div>
                         <div class="col-md-6">
                             <h4 class="text-secondary">Your Reply</h4>
-                            <textarea class="form-control mb-3" rows="6" placeholder="Type your reply here..." id="reply_message_send"></textarea>
+
+                            <div class="form-group">
+                                <textarea class="form-control" rows="6" placeholder="Type your reply here..." id="reply_message_send"></textarea>
+                                <small class="text-danger d-none" id="error_reply_message_send">The message cannot be empty. Please enter a valid reply.</small>
+                            </div>
+
                             <button type="button" class="btn btn-primary btn-block" id="reply_submit">Send Reply</button>
 
                             <input type="hidden" id="reply_id">

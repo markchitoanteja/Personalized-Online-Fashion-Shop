@@ -72,6 +72,7 @@ if (session("user_id")) {
     <link rel="stylesheet" href="../assets/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="../assets/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="../assets/admin/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../assets/admin/dist/css/custom.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -178,6 +179,12 @@ if (session("user_id")) {
                             <a href="manage_products" class="nav-link <?= session("page") == "admin/manage_products" ? "active" : null ?>">
                                 <i class="nav-icon fas fa-box-open"></i>
                                 <p>Manage Products</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="manage_orders" class="nav-link <?= session("page") == "admin/manage_orders" ? "active" : null ?>">
+                                <i class="nav-icon fas fa-clipboard-list"></i>
+                                <p>Manage Orders</p>
                             </a>
                         </li>
                         <li class="nav-item">

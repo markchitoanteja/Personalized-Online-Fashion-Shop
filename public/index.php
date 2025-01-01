@@ -8,7 +8,15 @@ require_once '../app/models/Model.php';
 
 $uri = parse_url(trim($_SERVER['REQUEST_URI'], '/'), PHP_URL_PATH);
 
-$admin_pages = ["admin", "admin/dashboard", "admin/manage_products", "admin/system_updates", "admin/customer_messages"];
+$admin_pages = [
+    "admin", 
+    "admin/dashboard", 
+    "admin/manage_products", 
+    "admin/manage_orders", 
+    "admin/system_updates", 
+    "admin/customer_messages",
+];
+
 $excluded_pages = array_merge(["403", "404", "500", "server"], $admin_pages);
 
 if (array_key_exists($uri, $routes)) {

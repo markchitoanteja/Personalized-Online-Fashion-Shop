@@ -10,13 +10,13 @@
             </div>
             <div class="modal-body">
                 <div class="loading text-center py-5 d-none">
-                    <img src="assets/images/loading.webp" alt="Loading GIF" class="mb-3">
+                    <img src="../assets/images/loading.webp" alt="Loading GIF" class="mb-3">
                     <h3 class="text-muted">Loading...</h3>
                 </div>
                 <div class="main-form">
                     <div class="row">
                         <div class="col-lg-12 text-center">
-                            <img id="product_details_image" src="uploads/products/default-item-image.png" alt="Product Image Preview" class="img-thumbnail mb-3" style="width: 259px; height: 273px;">
+                            <img id="product_details_image" src="../uploads/products/default-item-image.png" alt="Product Image Preview" class="img-thumbnail mb-3" style="width: 259px; height: 273px;">
                         </div>
                     </div>
                     <hr>
@@ -41,7 +41,7 @@
                             <strong>Price:</strong>
                         </div>
                         <div class="col-lg-8">
-                            ₱<span id="product_details_price">0.00</span>
+                            <i class="fas fa-peso-sign"></i><span id="product_details_price">0.00</span>
                         </div>
                     </div>
                 </div>

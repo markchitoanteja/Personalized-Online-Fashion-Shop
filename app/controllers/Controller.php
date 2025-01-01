@@ -860,6 +860,103 @@ class Controller
         $this->response($this->success, $this->message);
     }
 
+    private function approve_order()
+    {
+        $id = post("id");
+
+        $data = [
+            "status" => "Approved",
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->update("orders", $data, ["id" => $id]);
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "Order has been approved successfully.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+    
+    private function cancel_order()
+    {
+        $id = post("id");
+
+        $data = [
+            "status" => "Cancelled",
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->update("orders", $data, ["id" => $id]);
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "Order has been cancelled successfully.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+    
+    private function approve_cancel()
+    {
+        $id = post("id");
+
+        $data = [
+            "request_cancel" => 0,
+            "status" => "Cancelled",
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->update("orders", $data, ["id" => $id]);
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "Request for order cancellation has been approved successfully.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+    
+    private function reject_cancel()
+    {
+        $id = post("id");
+
+        $data = [
+            "request_cancel" => 0,
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->update("orders", $data, ["id" => $id]);
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "Request for order cancellation has been rejected successfully.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
     private function logout()
     {
         session("user_id", "unset");

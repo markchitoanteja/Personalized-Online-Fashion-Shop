@@ -21,7 +21,7 @@
                                 <thead>
                                     <tr>
                                         <th>Date and Time</th>
-                                        <th>Customer Name</th>
+                                        <th>User Name</th>
                                         <th>Message</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -30,18 +30,22 @@
                                     <?php
                                     $database = new Database();
 
-                                    $sql = "SELECT * FROM conversations WHERE sender_id != 1 ORDER BY id DESC";
+                                    $sql = "SELECT * FROM conversations ORDER BY id DESC";
                                     $conversations = $database->query($sql);
                                     ?>
 
                                     <?php if ($conversations): ?>
                                         <?php foreach ($conversations as $conversation): ?>
-                                            <tr class="<?= $conversation["read_status"] == "unread" ? "text-bold" : null ?>">
+                                            <tr class="<?= $conversation["read_status"] == "unread" && $conversation["sender_id"] != 1 ? "text-bold" : null ?>">
                                                 <td><?= date('F j, Y g:i A', strtotime($conversation["created_at"])) ?></td>
                                                 <td><?= $database->select_one("users", ["id" => $conversation["sender_id"]])["name"] ?></td>
                                                 <td><?= $conversation["message"] ?></td>
                                                 <td class="text-center">
-                                                    <i title="Reply" class="fas fa-reply text-primary admin_reply" role="button" conversation_id="<?= $conversation["id"] ?>"></i>
+                                                    <?php if ($conversation["sender_id"] != 1): ?>
+                                                        <i title="Reply" class="fas fa-reply text-primary admin_reply" role="button" conversation_id="<?= $conversation["id"] ?>"></i>
+                                                    <?php else: ?>
+                                                        <small class="text-muted">No Actions</small>
+                                                    <?php endif ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>

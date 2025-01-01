@@ -2778,3 +2778,7 @@ responsive
 .remember_me_checkbox {
   cursor: pointer;
 }
+
+.fa-peso-sign::before {
+  content: "₱";
+}

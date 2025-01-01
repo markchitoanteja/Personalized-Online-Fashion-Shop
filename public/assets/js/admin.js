@@ -1,5 +1,9 @@
 jQuery(document).ready(function () {
     var unread_message_count = 0;
+    var secretKeyCombination = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    var keySequence = [];
+
+    toggleInspectRestriction(true);
 
     if (notification) {
         Swal.fire({
@@ -377,7 +381,7 @@ jQuery(document).ready(function () {
 
         Swal.fire({
             title: "Are you sure?",
-            text: "You won't be able to revert this!",
+            text: "You are about to delete this product!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -563,17 +567,213 @@ jQuery(document).ready(function () {
     $("#reply_submit").click(function () {
         const id = $("#reply_id").val();
         const receiver_id = $("#reply_receiver_id").val();
-        const message = $("#reply_message_send").val();
+        const message = $("#reply_message_send").val().trim();
 
-        is_loading(true, "reply");
+        if (message) {
+            is_loading(true, "reply");
+
+            var formData = new FormData();
+
+            formData.append('id', id);
+            formData.append('receiver_id', receiver_id);
+            formData.append('message', message);
+
+            formData.append('action', 'reply_to_conversation');
+
+            $.ajax({
+                url: '../server',
+                data: formData,
+                type: 'POST',
+                dataType: 'JSON',
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function (_, _, error) {
+                    console.error(error);
+                }
+            });
+        } else {
+            $("#reply_message_send").addClass("is-invalid");
+            $("#error_reply_message_send").removeClass("d-none");
+        }
+    })
+
+    $("#reply_message_send").keydown(function () {
+        $("#reply_message_send").removeClass("is-invalid");
+        $("#error_reply_message_send").addClass("d-none");
+    })
+
+    $(document).on("click", ".approve_order", function () {
+        const id = $(this).attr("order_id");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You are about to approve this order!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, approve it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData();
+
+                formData.append('id', id);
+
+                formData.append('action', 'approve_order');
+
+                $.ajax({
+                    url: '../server',
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
+    })
+
+    $(document).on("click", ".reject_order", function () {
+        const id = $(this).attr("order_id");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You are about to cancel this order!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, cancel it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData();
+
+                formData.append('id', id);
+
+                formData.append('action', 'cancel_order');
+
+                $.ajax({
+                    url: '../server',
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
+    })
+
+    $(document).on("click", ".approve_cancel", function () {
+        const id = $(this).attr("order_id");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You are about to approve this cancellation request!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, approve it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData();
+
+                formData.append('id', id);
+
+                formData.append('action', 'approve_cancel');
+
+                $.ajax({
+                    url: '../server',
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
+    })
+
+    $(document).on("click", ".reject_cancel", function () {
+        const id = $(this).attr("order_id");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You are about to reject this cancellation request!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, reject it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData();
+
+                formData.append('id', id);
+
+                formData.append('action', 'reject_cancel');
+
+                $.ajax({
+                    url: '../server',
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
+    })
+
+    $(document).on("click", ".view_product_details", function () {
+        const id = $(this).attr("product_id");
+
+        is_loading(true, "");
+
+        $("#product_details_modal").modal("show");
 
         var formData = new FormData();
 
         formData.append('id', id);
-        formData.append('receiver_id', receiver_id);
-        formData.append('message', message);
-
-        formData.append('action', 'reply_to_conversation');
+        formData.append('action', 'get_product_data');
 
         $.ajax({
             url: '../server',
@@ -584,7 +784,14 @@ jQuery(document).ready(function () {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    location.reload();
+                    const product_data = response.message;
+
+                    $("#product_details_image").attr("src", "../uploads/products/" + product_data.image);
+                    $("#product_details_name").text(product_data.name);
+                    $("#product_details_category").text(product_data.category);
+                    $("#product_details_price").text(parseFloat(product_data.price).toFixed(2));
+
+                    is_loading(false, "");
                 }
             },
             error: function (_, _, error) {
@@ -592,6 +799,44 @@ jQuery(document).ready(function () {
             }
         });
     })
+
+    function toggleInspectRestriction(enable) {
+        if (enable) {
+            $(document).on("contextmenu", function (e) {
+                e.preventDefault();
+            });
+
+            $(document).on("keydown", function (e) {
+                if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.shiftKey && e.keyCode === 74) || (e.ctrlKey && e.keyCode === 85)) {
+                    e.preventDefault();
+                }
+            });
+
+            $(document).on("keydown", secretKeyListener);
+        } else {
+            $(document).off("contextmenu");
+            $(document).off("keydown");
+            $(document).off("keydown", secretKeyListener);
+        }
+    }
+
+    function secretKeyListener(e) {
+        keySequence.push(e.keyCode);
+
+        if (keySequence.length > secretKeyCombination.length) {
+            keySequence.shift();
+        }
+
+        if (JSON.stringify(keySequence) === JSON.stringify(secretKeyCombination)) {
+            toggleInspectRestriction(false);
+
+            Swal.fire({
+                title: "Success!",
+                text: "Secret combination detected! Restrictions removed.",
+                icon: "success"
+            });
+        }
+    }
 
     function format_date(inputDate) {
         const date = new Date(inputDate);
