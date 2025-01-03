@@ -32,7 +32,7 @@
                                 <tbody>
                                     <?php
                                     $database = new Database();
-                                    $products = $database->select_all("products", "id", "DESC");
+                                    $products = $database->select_many("products", ["is_customer_added" => 0], "AND", "id", "DESC");
                                     ?>
 
                                     <?php if ($products): ?>
@@ -40,7 +40,7 @@
                                             <tr>
                                                 <td><?= $product["name"] ?></td>
                                                 <td><?= $product["category"] ?></td>
-                                                <td>₱ <?= $product["price"] ?></td>
+                                                <td><i class="fas fa-peso-sign"></i><?= $product["price"] ?></td>
                                                 <td class="text-center">
                                                     <i class="fas fa-pencil-alt text-primary mr-1 update_product" role="button" product_id="<?= $product["id"] ?>"></i>
                                                     <i class="fas fa-trash-alt text-danger delete_product" role="button" product_id="<?= $product["id"] ?>"></i>

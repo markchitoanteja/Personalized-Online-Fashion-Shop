@@ -7,7 +7,8 @@ $routes = [
     'about_us' => '../app/views/pages/about_us.php',
     'contact_us' => '../app/views/pages/contact_us.php',
     'cart' => '../app/views/pages/cart.php',
-    'orders' => '../app/views/pages/orders.php',
+    'placed_orders' => '../app/views/pages/placed_orders.php',
+    'my_purchases' => '../app/views/pages/my_purchases.php',
 
     // Admin Pages
     'admin' => '../app/views/admin/dashboard.php',

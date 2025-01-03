@@ -41,7 +41,7 @@
                             <strong>Price:</strong>
                         </div>
                         <div class="col-lg-8">
-                            <i class="fas fa-peso-sign"></i><span id="product_details_price">0.00</span>
+                            <i class="fas fa-peso-sign" id="product_details_peso_sign"></i><span id="product_details_price">0.00</span>
                         </div>
                     </div>
                 </div>

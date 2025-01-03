@@ -8,7 +8,7 @@ $offset = ($page_count - 1) * $records_per_page;
 $total_records = count($database->select_all('products'));
 $total_pages = ceil($total_records / $records_per_page);
 
-$sql = "SELECT * FROM products ORDER BY id DESC LIMIT ? OFFSET ?";
+$sql = "SELECT * FROM products WHERE is_customer_added = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
 $data = $database->query($sql, [$records_per_page, $offset]);
 ?>
 

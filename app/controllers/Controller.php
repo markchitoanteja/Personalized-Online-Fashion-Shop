@@ -884,6 +884,35 @@ class Controller
         $this->response($this->success, $this->message);
     }
     
+    private function approve_custom_order()
+    {
+        $id = post("id");
+        $quantity = post("quantity");
+        $price = post("price");
+
+        $total_price = $quantity * $price;
+
+        $data = [
+            "total_price" => $total_price,
+            "status" => "Approved",
+            "updated_at" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->database->update("orders", $data, ["id" => $id]);
+
+        $notification_message = [
+            "title" => "Success!",
+            "text" => "Custom order has been approved successfully.",
+            "icon" => "success",
+        ];
+
+        $this->success = true;
+
+        session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
     private function cancel_order()
     {
         $id = post("id");
@@ -907,7 +936,7 @@ class Controller
 
         $this->response($this->success, $this->message);
     }
-    
+
     private function approve_cancel()
     {
         $id = post("id");
@@ -932,7 +961,7 @@ class Controller
 
         $this->response($this->success, $this->message);
     }
-    
+
     private function reject_cancel()
     {
         $id = post("id");
@@ -953,6 +982,65 @@ class Controller
         $this->success = true;
 
         session("notification", $notification_message);
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function custom_order()
+    {
+        $customer_id = post("customer_id");
+        $name = post("name");
+        $category = post("category");
+        $price = post("price");
+        $quantity = post("quantity");
+        $image = upload("image", "uploads/products");
+
+        if ($image) {
+            $product_data = [
+                "uuid" => $this->database->generate_uuid(),
+                "name" => $name,
+                "category" => $category,
+                "price" => $price,
+                "image" => $image,
+                "is_customer_added" => 1,
+                "created_at" => date("Y-m-d H:i:s"),
+                "updated_at" => date("Y-m-d H:i:s"),
+            ];
+
+            $this->database->insert("products", $product_data);
+
+            $product_id = $this->database->get_last_insert_id();
+
+            $order_data = [
+                "uuid" => $this->database->generate_uuid(),
+                "user_id" => $customer_id,
+                "product_id" => $product_id,
+                "quantity" => $quantity,
+                "total_price" => 0,
+                "status" => "Placed",
+                "is_custom_order" => 1,
+                "created_at" => date("Y-m-d H:i:s"),
+                "updated_at" => date("Y-m-d H:i:s"),
+            ];
+
+            $this->database->insert("orders", $order_data);
+
+            $notification_message = [
+                "title" => "Success!",
+                "text" => "A custom order has been placed successfully.",
+                "icon" => "success",
+            ];
+        } else {
+            $notification_message = [
+                "title" => "Oops...",
+                "text" => "There was an error while uploading your image.",
+                "icon" => "error",
+            ];
+        }
+
+        session("notification", $notification_message);
+
+        $this->success = true;
 
         $this->response($this->success, $this->message);
     }

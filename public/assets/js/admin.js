@@ -609,41 +609,50 @@ jQuery(document).ready(function () {
 
     $(document).on("click", ".approve_order", function () {
         const id = $(this).attr("order_id");
+        const is_custom_order = $(this).attr("is_custom_order");
+        const quantity = $(this).attr("quantity");
 
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You are about to approve this order!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, approve it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var formData = new FormData();
+        if (is_custom_order == "0") {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You are about to approve this order!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, approve it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var formData = new FormData();
 
-                formData.append('id', id);
+                    formData.append('id', id);
 
-                formData.append('action', 'approve_order');
+                    formData.append('action', 'approve_order');
 
-                $.ajax({
-                    url: '../server',
-                    data: formData,
-                    type: 'POST',
-                    dataType: 'JSON',
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        if (response.success) {
-                            location.reload();
+                    $.ajax({
+                        url: '../server',
+                        data: formData,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload();
+                            }
+                        },
+                        error: function (_, _, error) {
+                            console.error(error);
                         }
-                    },
-                    error: function (_, _, error) {
-                        console.error(error);
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        } else {
+            $("#custom_order_id").val(id);
+            $("#custom_order_quantity").val(quantity);
+
+            $("#custom_order_modal").modal("show");
+        }
     })
 
     $(document).on("click", ".reject_order", function () {
@@ -765,6 +774,7 @@ jQuery(document).ready(function () {
 
     $(document).on("click", ".view_product_details", function () {
         const id = $(this).attr("product_id");
+        const is_custom_order = $(this).attr("is_custom_order");
 
         is_loading(true, "");
 
@@ -789,9 +799,48 @@ jQuery(document).ready(function () {
                     $("#product_details_image").attr("src", "../uploads/products/" + product_data.image);
                     $("#product_details_name").text(product_data.name);
                     $("#product_details_category").text(product_data.category);
-                    $("#product_details_price").text(parseFloat(product_data.price).toFixed(2));
+                    if (is_custom_order == "1") {
+                        $("#product_details_price").text("Custom Order");
+                        $("#product_details_peso_sign").addClass("d-none");
+                    } else {
+                        $("#product_details_price").text(parseFloat(product_data.price).toFixed(2));
+                        $("#product_details_peso_sign").removeClass("d-none");
+                    }
 
                     is_loading(false, "");
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    })
+
+    $("#custom_order_form").submit(function () {
+        const id = $("#custom_order_id").val();
+        const quantity = $("#custom_order_quantity").val();
+        const price = $("#custom_order_price").val();
+
+        is_loading(true, "custom_order");
+
+        var formData = new FormData();
+
+        formData.append('id', id);
+        formData.append('quantity', quantity);
+        formData.append('price', price);
+
+        formData.append('action', 'approve_custom_order');
+
+        $.ajax({
+            url: '../server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
                 }
             },
             error: function (_, _, error) {

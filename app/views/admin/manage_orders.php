@@ -71,12 +71,11 @@
                                                     <td class="<?= $status_color ?>"><?= $status ?></td>
                                                     <td class="text-center">
                                                         <?php if ($status == "Placed" || $status == "Cancel Requested"): ?>
-                                                            <i order_id="<?= $order["id"] ?>" class="fas fa-thumbs-up text-primary mr-2 <?= $order["request_cancel"] ? "approve_cancel" : "approve_order" ?>" title="Approve <?= $order["request_cancel"] ? "Cancel" : "Order" ?>" role="button"></i>
+                                                            <i quantity="<?= $order["quantity"] ?>" is_custom_order="<?= $order["is_custom_order"] ?>" order_id="<?= $order["id"] ?>" class="fas fa-thumbs-up text-primary mr-2 <?= $order["request_cancel"] ? "approve_cancel" : "approve_order" ?>" title="Approve <?= $order["request_cancel"] ? "Cancel" : "Order" ?>" role="button"></i>
                                                             <i order_id="<?= $order["id"] ?>" class="fas fa-thumbs-down text-danger mr-2 <?= $order["request_cancel"] ? "reject_cancel" : "reject_order" ?>" title="Reject <?= $order["request_cancel"] ? "Cancel" : "Order" ?>" role="button"></i>
-                                                            <i product_id="<?= $order["product_id"] ?>" class="fas fa-eye text-primary view_product_details" title="View Product Details" role="button"></i>
-                                                        <?php else: ?>
-                                                            <i product_id="<?= $order["product_id"] ?>" class="fas fa-eye text-primary view_product_details" title="View Product Details" role="button"></i>
                                                         <?php endif ?>
+                                                        
+                                                        <i is_custom_order="<?= $order["is_custom_order"] ?>" product_id="<?= $order["product_id"] ?>" class="fas fa-eye text-primary view_product_details" title="View Product Details" role="button"></i>
                                                     </td>
                                                 </tr>
                                             <?php endforeach ?>
@@ -92,6 +91,7 @@
     </section>
 </div>
 
-<?php include_once "../app/views/admin/components/product_details.php" ?>
+<?php include_once "../app/views/admin/components/product_details_modal.php" ?>
+<?php include_once "../app/views/admin/components/approve_custom_order_modal.php" ?>
 
 <?php include_once "../app/views/admin/templates/footer.php" ?>

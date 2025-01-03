@@ -120,6 +120,7 @@
     <?php include_once "../app/views/components/login_modal.php" ?>
     <?php include_once "../app/views/components/register_modal.php" ?>
     <?php include_once "../app/views/components/profile_modal.php" ?>
+    <?php include_once "../app/views/components/custom_order_modal.php" ?>
 
     <script>
         var user_id = "<?= session("user_id") ?>";

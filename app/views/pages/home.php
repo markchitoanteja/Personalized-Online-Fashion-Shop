@@ -1,9 +1,9 @@
 <?php
 $database = new Database();
 
-$mens = $database->select_many("products", ["category" => "men"], "", "id", "DESC");
-$womens = $database->select_many("products", ["category" => "women"], "", "id", "DESC");
-$kids = $database->select_many("products", ["category" => "kids"], "", "id", "DESC");
+$mens = $database->select_many("products", ["category" => "men", "is_customer_added" => 0], "AND", "id", "DESC");
+$womens = $database->select_many("products", ["category" => "women", "is_customer_added" => 0], "AND", "id", "DESC");
+$kids = $database->select_many("products", ["category" => "kids", "is_customer_added" => 0], "AND", "id", "DESC");
 ?>
 
 <!-- ***** Main Banner Area Start ***** -->
@@ -22,7 +22,7 @@ $kids = $database->select_many("products", ["category" => "kids"], "", "id", "DE
                                 <a href="products">Discover More</a>
                             </div>
                         </div>
-                        <img src="assets/images/left-banner-image.webp" alt="">
+                        <img src="assets/images/left-banner-image.webp" alt="Left Banner Image">
                     </div>
                 </div>
             </div>

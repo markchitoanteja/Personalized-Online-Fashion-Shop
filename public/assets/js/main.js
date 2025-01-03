@@ -1041,6 +1041,59 @@ jQuery(document).ready(function () {
         }
     })
 
+    $("#custom_order_image").change(function (event) {
+        try {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#custom_order_image_display').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(event.target.files[0]);
+        } catch {
+            $('#custom_order_image_display').attr('src', "uploads/products/default-item-image.png");
+        }
+    })
+
+    $("#custom_order_form").submit(function () {
+        const customer_id = $("#custom_order_customer_id").val();
+        const name = $("#custom_order_name").val();
+        const category = $("#custom_order_category").val();
+        const price = 0;
+        const quantity = $("#custom_order_quantity").val();
+        const image = $("#custom_order_image").prop("files")[0];
+
+        is_loading(true, "custom_order");
+
+        var formData = new FormData();
+        
+        formData.append('customer_id', customer_id);
+        formData.append('name', name);
+        formData.append('category', category);
+        formData.append('price', price);
+        formData.append('quantity', quantity);
+        formData.append('image', image);
+
+        formData.append('action', 'custom_order');
+        
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function(_, _, error) {
+                console.error(error);
+            }
+        });
+    });
+
     function markAsRead(currentUserID) {
         var formData = new FormData();
 

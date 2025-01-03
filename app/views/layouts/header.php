@@ -106,9 +106,26 @@ if (in_array(session("page"), ["cart", "orders"]) && !session("user_id")) {
                                 <li class="submenu">
                                     <a href="javascript:void(0)"><?= $user_data["name"] ?></a>
                                     <ul>
-                                        <li><a href="javascript:void(0)" class="profile">Profile</a></li>
-                                        <li><a href="cart" class="<?= session("page") == "cart" ? "bg-white" : null ?>">Cart <span class="badge badge-danger badge-pill ml-3 <?= $cart ? null : "d-none" ?>" id="cart"><?= $cart ?></span></a></li>
-                                        <li><a href="orders">Orders <span class="badge badge-danger badge-pill ml-3 <?= $placed ? null : "d-none" ?>" id="placed"><?= $placed ?></span></a></li>
+                                        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#custom_order_modal">Create Custom Order</a></li>
+                                        <li><a href="javascript:void(0)" class="profile">My Profile</a></li>
+                                        <li>
+                                            <a href="cart" class="<?= session("page") == "cart" ? "bg-white" : null ?>">
+                                                Cart
+                                                <span class="badge badge-danger badge-pill ml-3 <?= $cart ? null : "d-none" ?>" id="cart"><?= $cart ?></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="placed_orders" class="<?= session("page") == "placed_orders" ? "bg-white" : null ?>">
+                                                Placed Orders
+                                                <span class="badge badge-danger badge-pill ml-3 <?= $placed ? null : "d-none" ?>" id="placed"><?= $placed ?></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="my_purchases" class="<?= session("page") == "my_purchases" ? "bg-white" : null ?>">
+                                                My Purchases
+                                                <span class="badge badge-success badge-pill ml-3 <?= $approved ? null : "d-none" ?>" id="approved"><?= $approved ?></span>
+                                            </a>
+                                        </li>
                                         <li><a href="javascript:void(0)" class="logout">Logout</a></li>
                                     </ul>
                                 </li>

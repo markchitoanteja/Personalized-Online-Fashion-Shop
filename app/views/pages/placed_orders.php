@@ -31,7 +31,7 @@
                         <div class="table-responsive">
                             <?php
                             $database = new Database;
-                            $sql = "SELECT * FROM orders WHERE status != 'Cart' AND user_id = '" . session("user_id") . "' ORDER BY id DESC";
+                            $sql = "SELECT * FROM orders WHERE (status = 'Placed' OR status = 'Cancelled') AND user_id = '" . session("user_id") . "' ORDER BY id DESC";
                             $orders = $database->query($sql);
 
                             $placed_count = 0;
@@ -92,7 +92,11 @@
                                                 <td class="text-center" order_id="<?= $order["id"] ?>">#<?= generate_order_id($order["id"]) ?></td>
                                                 <td class="text-center"><?= $database->select_one("products", ["id" => $order["product_id"]])["name"] ?></td>
                                                 <td class="text-center"><?= $order["quantity"] ?> Item<?= $order["quantity"] > 1 ? "s" : null ?></td>
-                                                <td class="text-center"><i class="fa fa-peso-sign"></i> <?= number_format($order["total_price"], 2) ?></td>
+                                                <?php if ($order["is_custom_order"]): ?>
+                                                    <td class="text-center">Not Yet Available</td>
+                                                <?php else: ?>
+                                                    <td class="text-center"><i class="fa fa-peso-sign"></i> <?= number_format($order["total_price"], 2) ?></td>
+                                                <?php endif ?>
                                                 <td class="text-center <?= $status_color ?>"><?= !$order["request_cancel"] ? $order["status"] : "Cancel Pending" ?></td>
                                             </tr>
                                         <?php endforeach ?>

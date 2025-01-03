@@ -72,6 +72,7 @@ class Model
             category VARCHAR(11) NOT NULL,
             price FLOAT(11,2) NOT NULL,
             image VARCHAR(255) NOT NULL,
+            is_customer_added TINYINT DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";
@@ -92,6 +93,7 @@ class Model
             total_price FLOAT(11,2) NOT NULL,
             status VARCHAR(20) DEFAULT 'pending',
             request_cancel TINYINT DEFAULT 0,
+            is_custom_order TINYINT DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";
