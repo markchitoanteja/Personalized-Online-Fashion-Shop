@@ -66,6 +66,10 @@ class Controller
         $birthday = post("birthday");
         $email = post("email");
         $mobile_number = post("mobile_number");
+        $region = post("region");
+        $province = post("province");
+        $city_municipality = post("city_municipality");
+        $barangay = post("barangay");
         $address = post("address");
         $username = post("username");
         $password = post("password");
@@ -119,6 +123,10 @@ class Controller
                     "birthday" => $birthday,
                     "email" => $email,
                     "mobile_number" => $mobile_number,
+                    "region" => $region,
+                    "province" => $province,
+                    "city_municipality" => $city_municipality,
+                    "barangay" => $barangay,
                     "address" => $address,
                     "created_at" => date("Y-m-d H:i:s"),
                     "updated_at" => date("Y-m-d H:i:s"),
@@ -157,6 +165,10 @@ class Controller
         $birthday = post("birthday");
         $email = post("email");
         $mobile_number = post("mobile_number");
+        $region = post("region");
+        $province = post("province");
+        $city_municipality = post("city_municipality");
+        $barangay = post("barangay");
         $address = post("address");
         $username = post("username");
         $password = post("password");
@@ -211,6 +223,10 @@ class Controller
                     "birthday" => $birthday,
                     "email" => $email,
                     "mobile_number" => $mobile_number,
+                    "region" => $region,
+                    "province" => $province,
+                    "city_municipality" => $city_municipality,
+                    "barangay" => $barangay,
                     "address" => $address,
                     "updated_at" => date("Y-m-d H:i:s"),
                 ];
@@ -1041,6 +1057,59 @@ class Controller
         session("notification", $notification_message);
 
         $this->success = true;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_user_delivery_details(){
+        $user_id = post("user_id");
+
+        $delivery_details = $this->database->select_one("customers", ["user_id" => $user_id]);
+
+        $this->success = true;
+        $this->message = $delivery_details;
+
+        $this->response($this->success, $this->message);
+    }
+    
+    private function get_regions(){
+        $regions = $this->database->query("SELECT DISTINCT * FROM ph_address_regions");
+
+        $this->success = true;
+        $this->message = $regions;
+
+        $this->response($this->success, $this->message);
+    }
+    
+    private function get_provinces(){
+        $region_code = post("region_code");
+
+        $provinces = $this->database->query("SELECT DISTINCT * FROM ph_address_provinces WHERE region_code = ?", [$region_code]);
+
+        $this->success = true;
+        $this->message = $provinces;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_cities(){
+        $province_code = post("province_code");
+
+        $cities = $this->database->query("SELECT DISTINCT * FROM ph_address_cities_municipalities WHERE province_code = ?", [$province_code]);
+
+        $this->success = true;
+        $this->message = $cities;
+
+        $this->response($this->success, $this->message);
+    }
+
+    private function get_barangays(){
+        $city_municipality_code = post("city_municipality_code");
+
+        $barangays = $this->database->query("SELECT DISTINCT * FROM ph_address_barangays WHERE city_municipality_code = ?", [$city_municipality_code]);
+
+        $this->success = true;
+        $this->message = $barangays;
 
         $this->response($this->success, $this->message);
     }

@@ -66,10 +66,71 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="register_region">Region</label>
+                                    <div class="d-flex align-items-center">
+                                        <select id="register_region" class="custom-select" required>
+                                            <option value selected disabled></option>
+
+                                            <?php
+                                            $database = new Database();
+
+                                            $regions = $database->query("SELECT * FROM ph_address_regions ORDER BY region_description ASC");
+                                            ?>
+
+                                            <?php foreach ($regions as $region) : ?>
+                                                <option value="<?= $region['region_code'] ?>"><?= $region['region_description'] ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div class="spinner-border spinner-border-sm text-muted ml-2 d-none" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="register_province">Province</label>
+                                    <div class="d-flex align-items-center">
+                                        <select id="register_province" class="custom-select" disabled required>
+                                            <!-- Province options will be fetched using AJAX -->
+                                        </select>
+                                        <div class="spinner-border spinner-border-sm text-muted ml-2 d-none" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="register_city_municipality">City/Municipality</label>
+                                    <div class="d-flex align-items-center">
+                                        <select id="register_city_municipality" class="custom-select" disabled required>
+                                            <!-- City/Municipality options will be fetched using AJAX -->
+                                        </select>
+                                        <div class="spinner-border spinner-border-sm text-muted ml-2 d-none" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="register_barangay">Barangay</label>
+                                    <select id="register_barangay" class="custom-select" disabled required>
+                                        <!-- Barangay options will be fetched using AJAX -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="register_address">Address</label>
-                                    <textarea id="register_address" class="form-control" rows="2" required></textarea>
+                                    <label for="register_address">Complete Address <small>(Include Street and House Number)</small></label>
+                                    <textarea id="register_address" rows="3" class="form-control" required></textarea>
                                 </div>
                             </div>
                         </div>

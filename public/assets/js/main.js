@@ -1,6 +1,6 @@
 jQuery(document).ready(function () {
     const url = new URL(window.location.href);
-    const secretKeyCombination = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    const secretKeyCombination = [72, 69, 83, 79, 89, 65, 77];
     const emojis = {
         smileys: [
             "😀", "😃", "😄", "😁", "😆", "😊", "😍", "😘", "😋", "😂",
@@ -91,7 +91,7 @@ jQuery(document).ready(function () {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    if (page == "cart" || page == "orders") {
+                    if (page == "cart" || page == "my_purchases" || page == "placed_orders") {
                         location.href = "/";
                     } else {
                         location.reload();
@@ -152,6 +152,10 @@ jQuery(document).ready(function () {
         const birthday = $("#register_birthday").val();
         const email = $("#register_email").val();
         const mobile_number = $("#register_mobile_number").val();
+        const region = $("#register_region").val();
+        const province = $("#register_province").val();
+        const city_municipality = $("#register_city_municipality").val();
+        const barangay = $("#register_barangay").val();
         const address = $("#register_address").val();
         const username = $("#register_username").val();
         const password = $("#register_password").val();
@@ -179,6 +183,10 @@ jQuery(document).ready(function () {
             formData.append('birthday', birthday);
             formData.append('email', email);
             formData.append('mobile_number', mobile_number);
+            formData.append('region', region);
+            formData.append('province', province);
+            formData.append('city_municipality', city_municipality);
+            formData.append('barangay', barangay);
             formData.append('address', address);
             formData.append('username', username);
             formData.append('password', password);
@@ -362,7 +370,6 @@ jQuery(document).ready(function () {
         var formData = new FormData();
 
         formData.append('id', id);
-
         formData.append('action', 'get_profile_data');
 
         $.ajax({
@@ -376,15 +383,14 @@ jQuery(document).ready(function () {
                 const profile_data = response.message;
 
                 $("#profile_image_display").attr("src", "uploads/users/" + profile_data.image);
-
                 $("#profile_first_name").val(profile_data.first_name);
                 $("#profile_middle_name").val(profile_data.middle_name);
                 $("#profile_last_name").val(profile_data.last_name);
                 $("#profile_birthday").val(profile_data.birthday);
                 $("#profile_email").val(profile_data.email);
                 $("#profile_mobile_number").val(profile_data.mobile_number);
-                $("#profile_address").val(profile_data.address);
                 $("#profile_username").val(profile_data.username);
+                $("#profile_address").val(profile_data.address);
 
                 $("#profile_user_id").val(profile_data.user_id);
                 $("#profile_old_email").val(profile_data.email);
@@ -392,7 +398,7 @@ jQuery(document).ready(function () {
                 $("#profile_old_password").val(profile_data.password);
                 $("#profile_old_image").val(profile_data.image);
 
-                is_loading(false, "profile");
+                loadRegion(profile_data.region, profile_data.province, profile_data.city_municipality, profile_data.barangay);
             },
             error: function (_, _, error) {
                 console.error(error);
@@ -445,6 +451,10 @@ jQuery(document).ready(function () {
         const birthday = $("#profile_birthday").val();
         const email = $("#profile_email").val();
         const mobile_number = $("#profile_mobile_number").val();
+        const region = $("#profile_region").val();
+        const province = $("#profile_province").val();
+        const city_municipality = $("#profile_city_municipality").val();
+        const barangay = $("#profile_barangay").val();
         const address = $("#profile_address").val();
         const username = $("#profile_username").val();
         const password = $("#profile_password").val();
@@ -478,6 +488,10 @@ jQuery(document).ready(function () {
             formData.append('birthday', birthday);
             formData.append('email', email);
             formData.append('mobile_number', mobile_number);
+            formData.append('region', region);
+            formData.append('province', province);
+            formData.append('city_municipality', city_municipality);
+            formData.append('barangay', barangay);
             formData.append('address', address);
             formData.append('username', username);
             formData.append('password', password);
@@ -665,6 +679,8 @@ jQuery(document).ready(function () {
     })
 
     $("#place_order").click(function () {
+        const currentUserID = parseInt(user_id);
+
         $("#order_summary_modal").modal("show");
 
         is_loading(true, "order_summary");
@@ -672,82 +688,56 @@ jQuery(document).ready(function () {
         let selectedItems = getCheckedItems();
         let grand_total = 0;
 
-        let receiptHTML = `
+        $("#orderSummaryContent").html(`
             <div class="receipt-container p-3">
                 <div class="receipt-header text-center mb-3">
-                    <h4>Order Receipt</h4>
+                    <h4>Order Summary</h4>
                     <p>Date: ${new Date().toLocaleDateString()}</p>
                 </div>
+                <div class="delivery-details mb-3">
+                    <h5><strong>Delivery Details</strong></h5>
+                    <div class="delivery-details-container">
+                        <p class="text-muted">Loading delivery details...</p>
+                    </div>
+                </div>
+                <div class="payment-methods mt-3">
+                    <h5><strong>Payment Method</strong></h5>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payment_cod" value="COD" checked>
+                            <label class="form-check-label" for="payment_cod">Cash on Delivery (COD)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payment_card" value="Card" disabled>
+                            <label class="form-check-label text-muted" for="payment_card">Credit/Debit Card (Coming Soon)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payment_wallet" value="Wallet" disabled>
+                            <label class="form-check-label text-muted" for="payment_wallet">E-Wallet (Coming Soon)</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="receipt-body">
-                    <ul class="list-group">
-        `;
-
-        let ajaxCalls = [];
-        let order_ids = [];
-
-        selectedItems.forEach((item) => {
-            const order_id = item.order_id;
-
-            order_ids.push(order_id);
-
-            var formData = new FormData();
-
-            formData.append('id', order_id);
-            formData.append('action', 'get_order_data_with_product_name');
-
-            let ajaxCall = $.ajax({
-                url: 'server',
-                data: formData,
-                type: 'POST',
-                dataType: 'JSON',
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    const order_data = response.message;
-                    const product_name = order_data.product_name;
-                    const quantity = order_data.quantity;
-                    const total_price = order_data.total_price;
-
-                    grand_total = grand_total + total_price;
-
-                    receiptHTML += `
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>${product_name}</strong>
-                                <p class="mb-0">Quantity: ${quantity}</p>
-                            </div>
-                            <span>₱${total_price.toFixed(2)}</span>
-                        </li>
-                    `;
-                },
-                error: function (_, _, error) {
-                    console.error(error);
-                },
-            });
-
-            ajaxCalls.push(ajaxCall);
-        });
-
-        $.when(...ajaxCalls).done(function () {
-            receiptHTML += `
+                    <h5 class="section-header">Order Details</h5>
+                    <ul class="list-group" id="order_items_list">
+                        <!-- Order items will be appended here -->
                     </ul>
                 </div>
                 <div class="receipt-footer mt-3 text-right">
-                    <h5>Total: 
-                        <span>₱${grand_total.toFixed(2)}</span>
-                    </h5>
+                    <h5>Total: <span id="grand_total"><i class="fas fa-peso-sign"></i>0.00</span></h5>
                 </div>
             </div>
-            
-            <small class="text-muted"><b>Information:</b> Discounts will be applied after the seller approves the order.</small>
-            `;
+            <small class="receipt-text-muted"><b>Information:</b> Verify your delivery details. Discounts apply after seller approval.</small>
+        `);
 
-            $("#orderSummaryContent").html(receiptHTML);
+        fetchDeliveryDetails(currentUserID);
 
-            $("#order_summary_order_ids").val(order_ids);
-
-            is_loading(false, "order_summary");
+        fetchOrderItems(selectedItems, function (itemsHTML, total) {
+            $("#order_items_list").html(itemsHTML);
+            $("#grand_total").text(`₱${total.toFixed(2)}`);
         });
+
+        is_loading(false, "order_summary");
     })
 
     $("#delete_order").click(function () {
@@ -1066,7 +1056,7 @@ jQuery(document).ready(function () {
         is_loading(true, "custom_order");
 
         var formData = new FormData();
-        
+
         formData.append('customer_id', customer_id);
         formData.append('name', name);
         formData.append('category', category);
@@ -1075,7 +1065,7 @@ jQuery(document).ready(function () {
         formData.append('image', image);
 
         formData.append('action', 'custom_order');
-        
+
         $.ajax({
             url: 'server',
             data: formData,
@@ -1083,16 +1073,441 @@ jQuery(document).ready(function () {
             dataType: 'JSON',
             processData: false,
             contentType: false,
-            success: function(response) {
+            success: function (response) {
                 if (response.success) {
                     location.reload();
                 }
             },
-            error: function(_, _, error) {
+            error: function (_, _, error) {
                 console.error(error);
             }
         });
-    });
+    })
+    
+    $("#profile_region").change(function () {
+        const regionCode = $(this).val();
+        const spinner = $("#profile_region").next(".spinner-border");
+    
+        spinner.removeClass("d-none").show();
+    
+        const formData = new FormData();
+        formData.append('region_code', regionCode);
+        formData.append('action', 'get_provinces');
+    
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const provinces = response.message;
+    
+                $("#profile_city_municipality").attr("disabled", true).empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
+                $("#profile_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
+    
+                $("#profile_province").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Province --</option>');
+                
+                provinces.forEach(province => {
+                    $("#profile_province").append(
+                        `<option value="${province.province_code}">${province.province_description}</option>`
+                    );
+                });
+    
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+    
+    $("#profile_province").change(function () {
+        const provinceCode = $(this).val();
+        const spinner = $("#profile_province").next(".spinner-border");
+    
+        spinner.removeClass("d-none").show();
+    
+        const formData = new FormData();
+        formData.append('province_code', provinceCode);
+        formData.append('action', 'get_cities');
+    
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const cities = response.message;
+    
+                $("#profile_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
+    
+                $("#profile_city_municipality").removeAttr("disabled").empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
+                
+                cities.forEach(city => {
+                    $("#profile_city_municipality").append(
+                        `<option value="${city.city_municipality_code}">${city.city_municipality_description}</option>`
+                    );
+                });
+    
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+    
+    $("#profile_city_municipality").change(function () {
+        const cityMunicipalityCode = $(this).val();
+        const spinner = $("#profile_city_municipality").next(".spinner-border");
+    
+        spinner.removeClass("d-none").show();
+    
+        const formData = new FormData();
+        formData.append('city_municipality_code', cityMunicipalityCode);
+        formData.append('action', 'get_barangays');
+    
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const barangays = response.message;
+    
+                $("#profile_barangay").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Barangay --</option>');
+                barangays.forEach(barangay => {
+                    $("#profile_barangay").append(
+                        `<option value="${barangay.id}">${barangay.barangay_description}</option>`
+                    );
+                });
+    
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+    
+    $("#register_region").change(function () {
+        const regionCode = $(this).val();
+        const spinner = $("#register_region").next(".spinner-border");
+    
+        spinner.removeClass("d-none").show();
+    
+        const formData = new FormData();
+        formData.append('region_code', regionCode);
+        formData.append('action', 'get_provinces');
+    
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const provinces = response.message;
+    
+                $("#register_city_municipality").attr("disabled", true).empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
+                $("#register_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
+    
+                $("#register_province").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Province --</option>');
+                
+                provinces.forEach(province => {
+                    $("#register_province").append(
+                        `<option value="${province.province_code}">${province.province_description}</option>`
+                    );
+                });
+    
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+    
+    $("#register_province").change(function () {
+        const provinceCode = $(this).val();
+        const spinner = $("#register_province").next(".spinner-border");
+    
+        spinner.removeClass("d-none").show();
+    
+        const formData = new FormData();
+        formData.append('province_code', provinceCode);
+        formData.append('action', 'get_cities');
+    
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const cities = response.message;
+    
+                $("#register_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
+    
+                $("#register_city_municipality").removeAttr("disabled").empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
+                
+                cities.forEach(city => {
+                    $("#register_city_municipality").append(
+                        `<option value="${city.city_municipality_code}">${city.city_municipality_description}</option>`
+                    );
+                });
+    
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+    
+    $("#register_city_municipality").change(function () {
+        const cityMunicipalityCode = $(this).val();
+        const spinner = $("#register_city_municipality").next(".spinner-border");
+    
+        spinner.removeClass("d-none").show();
+    
+        const formData = new FormData();
+        formData.append('city_municipality_code', cityMunicipalityCode);
+        formData.append('action', 'get_barangays');
+    
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const barangays = response.message;
+    
+                $("#register_barangay").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Barangay --</option>');
+                
+                barangays.forEach(barangay => {
+                    $("#register_barangay").append(
+                        `<option value="${barangay.id}">${barangay.barangay_description}</option>`
+                    );
+                });
+    
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+
+    function handleAjaxError(spinner, errorMessage = "An error occurred. Please try again.") {
+        console.error(errorMessage);
+        
+        Swal.fire({
+            title: "Don't worry!",
+            text: "This is an error probobly due to your internet connection. Just try again.",
+            icon: "error"
+        });
+
+        spinner.hide();
+    }
+
+    function loadRegion(region_code, province_code, city_code, barangay_code) {
+        $.ajax({
+            url: 'server',
+            type: 'POST',
+            data: { action: 'get_regions' },
+            dataType: 'JSON',
+            success: function (response) {
+                const regions = response.message;
+
+                regions.forEach(region => {
+                    $("#profile_region").append(`<option value="${region.region_code}">${region.region_description}</option>`);
+                });
+
+                $("#profile_region").val(region_code);
+
+                if ($("#profile_region option").length > 1) {
+                    loadProvinces(region_code, province_code, city_code, barangay_code);
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function loadProvinces(region_code, province_code, city_code, barangay_code) {
+        $.ajax({
+            url: 'server',
+            type: 'POST',
+            data: { region_code: region_code, action: 'get_provinces' },
+            dataType: 'JSON',
+            success: function (response) {
+                const provinces = response.message;
+
+                provinces.forEach(province => {
+                    $("#profile_province").append(`<option value="${province.province_code}">${province.province_description}</option>`);
+                });
+
+                if ($("#profile_province option").length > 1) {
+                    $("#profile_province").val(province_code).removeAttr("disabled");
+
+                    loadCities(province_code, city_code, barangay_code);
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function loadCities(province_code, city_code, barangay_code) {
+        $.ajax({
+            url: 'server',
+            type: 'POST',
+            data: { province_code: province_code, action: 'get_cities' },
+            dataType: 'JSON',
+            success: function (response) {
+                const cities = response.message;
+
+                cities.forEach(city => {
+                    $("#profile_city_municipality").append(`<option value="${city.city_municipality_code}">${city.city_municipality_description}</option>`);
+                });
+
+                if ($("#profile_city_municipality option").length > 1) {
+                    $("#profile_city_municipality").val(city_code).removeAttr("disabled");
+
+                    loadBarangays(city_code, barangay_code);
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function loadBarangays(city_code, barangay_code) {
+        $.ajax({
+            url: 'server',
+            type: 'POST',
+            data: { city_municipality_code: city_code, action: 'get_barangays' },
+            dataType: 'JSON',
+            success: function (response) {
+                const barangays = response.message;
+
+                barangays.forEach(barangay => {
+                    $("#profile_barangay").append(`<option value="${barangay.id}">${barangay.barangay_description}</option>`);
+                });
+
+                if ($("#profile_barangay option").length > 1) {
+                    $("#profile_barangay").val(barangay_code).removeAttr("disabled");
+
+                    is_loading(false, "profile");
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function fetchDeliveryDetails(userID) {
+        let deliveryFormData = new FormData();
+        deliveryFormData.append("action", "get_user_delivery_details");
+        deliveryFormData.append("user_id", userID);
+
+        $.ajax({
+            url: "server",
+            data: deliveryFormData,
+            type: "POST",
+            dataType: "JSON",
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                const deliveryDetails = response.message;
+
+                if (deliveryDetails) {
+                    const deliveryHTML = `
+                        <p><strong>Full Name:</strong> ${deliveryDetails.first_name} ${deliveryDetails.last_name}</p>
+                        <p><strong>Complete Address:</strong> ${deliveryDetails.address}</p>
+                        <p><strong>Mobile Number:</strong> ${deliveryDetails.mobile_number}</p>
+                        <p><strong>Email Address:</strong> ${deliveryDetails.email}</p>
+                    `;
+                    $(".delivery-details-container").html(deliveryHTML);
+                } else {
+                    $(".delivery-details-container").html('<p class="text-danger">No delivery details available.</p>');
+                }
+            },
+            error: function () {
+                $(".delivery-details-container").html('<p class="text-danger">Failed to load delivery details.</p>');
+            },
+        });
+    }
+
+    function fetchOrderItems(selectedItems, callback) {
+        let itemsHTML = "";
+        let grand_total = 0;
+        let ajaxCalls = [];
+
+        selectedItems.forEach((item) => {
+            const order_id = item.order_id;
+
+            var formData = new FormData();
+            formData.append("id", order_id);
+            formData.append("action", "get_order_data_with_product_name");
+
+            let ajaxCall = $.ajax({
+                url: "server",
+                data: formData,
+                type: "POST",
+                dataType: "JSON",
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    const order_data = response.message;
+                    const product_name = order_data.product_name;
+                    const quantity = order_data.quantity;
+                    const total_price = order_data.total_price;
+
+                    grand_total += total_price;
+
+                    const item_verb = quantity > 1 ? "items" : "item";
+
+                    itemsHTML += `
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-3">
+                            <div>
+                                <strong>${product_name}</strong>
+                                <p class="mb-0">Qty: ${quantity} ${item_verb}</p>
+                            </div>
+                            <span><span class="fas fa-peso-sign"></span>${total_price.toFixed(2)}</span>
+                        </li>
+                    `;
+                },
+            });
+
+            ajaxCalls.push(ajaxCall);
+        });
+
+        $.when(...ajaxCalls).done(function () {
+            callback(itemsHTML, grand_total);
+        });
+    }
 
     function markAsRead(currentUserID) {
         var formData = new FormData();

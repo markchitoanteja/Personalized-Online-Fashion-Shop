@@ -20,6 +20,27 @@ class Model
         $this->create_notification_settings_table();
         $this->insert_admin_data();
         $this->insert_notification_settings_data();
+
+        $this->check_addresses_table();
+
+        // Manually import the following tables: ph_address_regions, ph_address_provinces, ph_address_cities_municipalities, ph_address_barangays
+        // They are located in the public/backup folder
+    }
+
+    private function check_addresses_table()
+    {
+        $sql_1 = "SELECT 1 FROM ph_address_regions LIMIT 1";
+        $sql_2 = "SELECT 1 FROM ph_address_provinces LIMIT 1";
+        $sql_3 = "SELECT 1 FROM ph_address_cities_municipalities LIMIT 1";
+        $sql_4 = "SELECT 1 FROM ph_address_barangays LIMIT 1";
+
+        if (!$this->connection->query($sql_1) === FALSE && !$this->connection->query($sql_2) === FALSE && !$this->connection->query($sql_3) === FALSE && !$this->connection->query($sql_4) === FALSE) {
+            return true;
+        } else {
+            die("Manually import the following tables: ph_address_regions, ph_address_provinces, ph_address_cities_municipalities, ph_address_barangays");
+
+            return false;
+        }
     }
 
     private function create_users_table()
@@ -53,6 +74,10 @@ class Model
             birthday VARCHAR(10) NOT NULL,
             email VARCHAR(30) NOT NULL UNIQUE,
             mobile_number VARCHAR(11) NOT NULL,
+            region VARCHAR(255) NOT NULL,
+            province VARCHAR(255) NOT NULL,
+            city_municipality VARCHAR(255) NOT NULL,
+            barangay VARCHAR(255) NOT NULL,
             address TEXT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

@@ -1,6 +1,6 @@
 jQuery(document).ready(function () {
+    const secretKeyCombination = [72, 69, 83, 79, 89, 65, 77];
     var unread_message_count = 0;
-    var secretKeyCombination = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
     var keySequence = [];
 
     toggleInspectRestriction(true);

@@ -1,4 +1,4 @@
-<!-- Register Modal -->
+<!-- Update Profile Modal -->
 <div class="modal fade" id="profile_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -33,7 +33,7 @@
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label for="profile_middle_name">Middle Name</label>
+                                    <label for="profile_middle_name">Middle Name <small class="text-muted">(Optional)</small></label>
                                     <input type="text" class="form-control" id="profile_middle_name">
                                 </div>
                             </div>
@@ -66,10 +66,61 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="profile_region">Region</label>
+                                    <div class="d-flex align-items-center">
+                                        <select id="profile_region" class="custom-select" required>
+                                            <!-- Region options will be fetched using AJAX -->
+                                        </select>
+                                        <div class="spinner-border spinner-border-sm text-muted ml-2 d-none" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="profile_province">Province</label>
+                                    <div class="d-flex align-items-center">
+                                        <select id="profile_province" class="custom-select" disabled required>
+                                            <!-- Province options will be fetched using AJAX -->
+                                        </select>
+                                        <div class="spinner-border spinner-border-sm text-muted ml-2 d-none" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="profile_city_municipality">City/Municipality</label>
+                                    <div class="d-flex align-items-center">
+                                        <select id="profile_city_municipality" class="custom-select" disabled required>
+                                            <!-- City/Municipality options will be fetched using AJAX -->
+                                        </select>
+                                        <div class="spinner-border spinner-border-sm text-muted ml-2 d-none" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="profile_barangay">Barangay</label>
+                                    <select id="profile_barangay" class="custom-select" disabled required>
+                                        <!-- Barangay options will be fetched using AJAX -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="profile_address">Address</label>
-                                    <textarea id="profile_address" class="form-control" rows="2" required></textarea>
+                                    <label for="profile_address">Complete Address <small>(Include Street and House Number)</small></label>
+                                    <textarea id="profile_address" rows="4" class="form-control" required></textarea>
                                 </div>
                             </div>
                         </div>
