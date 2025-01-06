@@ -270,7 +270,7 @@ function version()
 {
     $major = 0;
     $minor = 1;
-    $patch = 15;
+    $patch = 16;
 
     return "$major.$minor.$patch";
 }

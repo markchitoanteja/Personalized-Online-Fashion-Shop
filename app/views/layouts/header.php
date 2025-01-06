@@ -123,7 +123,6 @@ if (in_array(session("page"), ["cart", "placed_orders", "my_purchases"]) && !ses
                                         <li>
                                             <a href="my_purchases" class="<?= session("page") == "my_purchases" ? "bg-white" : null ?>">
                                                 My Purchases
-                                                <span class="badge badge-success badge-pill ml-3 <?= $approved ? null : "d-none" ?>" id="approved"><?= $approved ?></span>
                                             </a>
                                         </li>
                                         <li><a href="javascript:void(0)" class="logout">Logout</a></li>

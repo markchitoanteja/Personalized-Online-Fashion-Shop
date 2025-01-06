@@ -686,8 +686,7 @@ jQuery(document).ready(function () {
         is_loading(true, "order_summary");
 
         let selectedItems = getCheckedItems();
-        let grand_total = 0;
-
+        
         $("#orderSummaryContent").html(`
             <div class="receipt-container p-3">
                 <div class="receipt-header text-center mb-3">
@@ -1464,11 +1463,15 @@ jQuery(document).ready(function () {
         let itemsHTML = "";
         let grand_total = 0;
         let ajaxCalls = [];
+        let order_ids = [];
 
         selectedItems.forEach((item) => {
             const order_id = item.order_id;
 
+            order_ids.push(order_id);
+
             var formData = new FormData();
+
             formData.append("id", order_id);
             formData.append("action", "get_order_data_with_product_name");
 
@@ -1505,7 +1508,7 @@ jQuery(document).ready(function () {
         });
 
         $.when(...ajaxCalls).done(function () {
-            callback(itemsHTML, grand_total);
+            callback(itemsHTML, grand_total, $("#order_summary_order_ids").val(order_ids));
         });
     }
 
