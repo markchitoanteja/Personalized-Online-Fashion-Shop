@@ -2655,7 +2655,8 @@ responsive
 
 .receipt-text-muted {
   font-size: 0.85rem;
-  color: #6c757d; /* Matches Bootstrap's muted text color */
+  color: #6c757d;
+  /* Matches Bootstrap's muted text color */
 }
 
 .chat-button {
@@ -2882,4 +2883,104 @@ responsive
 
 .fa-peso-sign::before {
   content: "₱";
+}
+
+.details-container {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.details-container .row {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.details-container .text-end {
+  text-align: right;
+}
+
+.timeline-container {
+  position: relative;
+  padding: 20px 0;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.timeline-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-content {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.timeline-item:before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #ddd;
+  z-index: 1;
+}
+
+.timeline-item:last-child:before {
+  bottom: 50%;
+}
+
+.timeline-icon.bg-success {
+  background-color: #28a745;
+}
+
+.timeline-icon.bg-info {
+  background-color: #17a2b8;
+}
+
+.timeline-icon.bg-warning {
+  background-color: #ffc107;
+}
+
+.timeline-icon .fa {
+  font-size: 18px;
+}
+
+.items-container {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.items-container .row {
+  font-size: 14px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.items-container .row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
 }

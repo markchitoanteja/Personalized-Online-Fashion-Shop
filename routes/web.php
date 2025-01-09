@@ -9,6 +9,7 @@ $routes = [
     'cart' => '../app/views/pages/cart.php',
     'placed_orders' => '../app/views/pages/placed_orders.php',
     'my_purchases' => '../app/views/pages/my_purchases.php',
+    'order_tracking' => '../app/views/pages/order_tracking.php',
 
     // Admin Pages
     'admin' => '../app/views/admin/dashboard.php',

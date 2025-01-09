@@ -18,9 +18,11 @@ class Model
         $this->create_contact_messages_table();
         $this->create_conversations_table();
         $this->create_notification_settings_table();
+        $this->create_shipped_orders_table();
+        $this->create_track_orders_table();
         $this->insert_admin_data();
         $this->insert_notification_settings_data();
-
+        
         $this->check_addresses_table();
 
         // Manually import the following tables: ph_address_regions, ph_address_provinces, ph_address_cities_municipalities, ph_address_barangays
@@ -112,6 +114,7 @@ class Model
         $sql = "CREATE TABLE IF NOT EXISTS orders (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             uuid CHAR(36) NOT NULL UNIQUE,
+            tracking_number VARCHAR(10) NOT NULL,
             user_id INT UNSIGNED NOT NULL,
             product_id INT UNSIGNED NOT NULL,
             quantity INT UNSIGNED NOT NULL,
@@ -201,6 +204,43 @@ class Model
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             uuid CHAR(36) NOT NULL,
             read_status ENUM('unread', 'read') DEFAULT 'unread',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating conversations table: " . $this->connection->error);
+        }
+    }
+    
+    private function create_shipped_orders_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS shipped_orders (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL,
+            tracking_number VARCHAR(10) NOT NULL,
+            discount FLOAT(11,2) NOT NULL,
+            shipping_fee FLOAT(11,2) NOT NULL,
+            total_price FLOAT(11,2) NOT NULL,
+            description TEXT NOT NULL,
+            status VARCHAR(20) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )";
+
+        if (!$this->connection->query($sql) === TRUE) {
+            die("Error creating conversations table: " . $this->connection->error);
+        }
+    }
+    
+    private function create_track_orders_table()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS track_orders (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            uuid CHAR(36) NOT NULL,
+            tracking_number VARCHAR(10) NOT NULL,
+            description TEXT NOT NULL,
+            status VARCHAR(20) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )";

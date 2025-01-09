@@ -100,7 +100,7 @@
                         <li><a href="javascript:void(0)" class="no-function">Help Center</a></li>
                         <li><a href="javascript:void(0)" class="no-function">FAQs</a></li>
                         <li><a href="javascript:void(0)" class="no-function">Shipping Info</a></li>
-                        <li><a href="javascript:void(0)" class="no-function">Order Tracking</a></li>
+                        <li><a href="order_tracking">Order Tracking</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-12">

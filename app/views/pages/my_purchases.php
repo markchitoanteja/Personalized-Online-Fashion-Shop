@@ -84,12 +84,20 @@
                                             if ($order["request_cancel"]) {
                                                 $status_color = "text-warning";
                                             }
+
+                                            $tracking_number = $order["tracking_number"] ? $order["tracking_number"] : "Not Yet Available";
                                             ?>
                                             <tr>
                                                 <?php if ($placed_count != 0): ?>
                                                     <td class="text-center"><input type="<?= $order["status"] == "Placed" && !$order["request_cancel"] ? "checkbox" : "hidden" ?>" style="cursor: pointer;"></td>
                                                 <?php endif ?>
-                                                <td class="text-center">Not Yet Available</td>
+                                                <td class="text-center">
+                                                    <?php if ($order["tracking_number"]): ?>
+                                                        <a href="order_tracking?tracking_number=<?= $tracking_number ?>" title="Click to track this order"><?= $tracking_number ?></a>
+                                                    <?php else: ?>
+                                                        <?= $tracking_number ?>
+                                                    <?php endif ?>
+                                                </td>
                                                 <td class="text-center"><?= $database->select_one("products", ["id" => $order["product_id"]])["name"] ?></td>
                                                 <td class="text-center"><?= $order["quantity"] ?> Item<?= $order["quantity"] > 1 ? "s" : null ?></td>
                                                 <td class="text-center"><i class="fa fa-peso-sign"></i> <?= number_format($order["total_price"], 2) ?></td>

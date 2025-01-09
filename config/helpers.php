@@ -268,9 +268,9 @@ function upload(string $file, string $path)
  */
 function version()
 {
-    $major = 0;
-    $minor = 1;
-    $patch = 16;
+    $major = 1;
+    $minor = 7;
+    $patch = 13;
 
     return "$major.$minor.$patch";
 }

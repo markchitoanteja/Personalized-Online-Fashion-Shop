@@ -14,7 +14,7 @@ if (session("user_id")) {
     $placed = count($database->select_many("orders", ["user_id" => session("user_id"), "status" => "Placed"]));
 }
 
-if (in_array(session("page"), ["cart", "placed_orders", "my_purchases"]) && !session("user_id")) {
+if (in_array(session("page"), ["cart", "placed_orders", "my_purchases", "order_tracking"]) && !session("user_id")) {
     session("notification", [
         "title" => "Oops...",
         "text" => "You need to login to view this page.",

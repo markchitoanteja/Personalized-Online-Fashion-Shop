@@ -91,7 +91,7 @@ jQuery(document).ready(function () {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    if (page == "cart" || page == "my_purchases" || page == "placed_orders") {
+                    if (page == "cart" || page == "my_purchases" || page == "placed_orders" || page == "order_tracking") {
                         location.href = "/";
                     } else {
                         location.reload();
@@ -686,7 +686,7 @@ jQuery(document).ready(function () {
         is_loading(true, "order_summary");
 
         let selectedItems = getCheckedItems();
-        
+
         $("#orderSummaryContent").html(`
             <div class="receipt-container p-3">
                 <div class="receipt-header text-center mb-3">
@@ -1082,17 +1082,17 @@ jQuery(document).ready(function () {
             }
         });
     })
-    
+
     $("#profile_region").change(function () {
         const regionCode = $(this).val();
         const spinner = $("#profile_region").next(".spinner-border");
-    
+
         spinner.removeClass("d-none").show();
-    
+
         const formData = new FormData();
         formData.append('region_code', regionCode);
         formData.append('action', 'get_provinces');
-    
+
         $.ajax({
             url: 'server',
             data: formData,
@@ -1103,209 +1103,18 @@ jQuery(document).ready(function () {
             timeout: 10000,
             success: function (response) {
                 const provinces = response.message;
-    
+
                 $("#profile_city_municipality").attr("disabled", true).empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
                 $("#profile_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
-    
+
                 $("#profile_province").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Province --</option>');
-                
+
                 provinces.forEach(province => {
                     $("#profile_province").append(
                         `<option value="${province.province_code}">${province.province_description}</option>`
                     );
                 });
-    
-                spinner.hide();
-            },
-            error: function (_, textStatus, error) {
-                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
-            }
-        });
-    })
-    
-    $("#profile_province").change(function () {
-        const provinceCode = $(this).val();
-        const spinner = $("#profile_province").next(".spinner-border");
-    
-        spinner.removeClass("d-none").show();
-    
-        const formData = new FormData();
-        formData.append('province_code', provinceCode);
-        formData.append('action', 'get_cities');
-    
-        $.ajax({
-            url: 'server',
-            data: formData,
-            type: 'POST',
-            dataType: 'JSON',
-            processData: false,
-            contentType: false,
-            timeout: 10000,
-            success: function (response) {
-                const cities = response.message;
-    
-                $("#profile_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
-    
-                $("#profile_city_municipality").removeAttr("disabled").empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
-                
-                cities.forEach(city => {
-                    $("#profile_city_municipality").append(
-                        `<option value="${city.city_municipality_code}">${city.city_municipality_description}</option>`
-                    );
-                });
-    
-                spinner.hide();
-            },
-            error: function (_, textStatus, error) {
-                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
-            }
-        });
-    })
-    
-    $("#profile_city_municipality").change(function () {
-        const cityMunicipalityCode = $(this).val();
-        const spinner = $("#profile_city_municipality").next(".spinner-border");
-    
-        spinner.removeClass("d-none").show();
-    
-        const formData = new FormData();
-        formData.append('city_municipality_code', cityMunicipalityCode);
-        formData.append('action', 'get_barangays');
-    
-        $.ajax({
-            url: 'server',
-            data: formData,
-            type: 'POST',
-            dataType: 'JSON',
-            processData: false,
-            contentType: false,
-            timeout: 10000,
-            success: function (response) {
-                const barangays = response.message;
-    
-                $("#profile_barangay").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Barangay --</option>');
-                barangays.forEach(barangay => {
-                    $("#profile_barangay").append(
-                        `<option value="${barangay.id}">${barangay.barangay_description}</option>`
-                    );
-                });
-    
-                spinner.hide();
-            },
-            error: function (_, textStatus, error) {
-                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
-            }
-        });
-    })
-    
-    $("#register_region").change(function () {
-        const regionCode = $(this).val();
-        const spinner = $("#register_region").next(".spinner-border");
-    
-        spinner.removeClass("d-none").show();
-    
-        const formData = new FormData();
-        formData.append('region_code', regionCode);
-        formData.append('action', 'get_provinces');
-    
-        $.ajax({
-            url: 'server',
-            data: formData,
-            type: 'POST',
-            dataType: 'JSON',
-            processData: false,
-            contentType: false,
-            timeout: 10000,
-            success: function (response) {
-                const provinces = response.message;
-    
-                $("#register_city_municipality").attr("disabled", true).empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
-                $("#register_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
-    
-                $("#register_province").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Province --</option>');
-                
-                provinces.forEach(province => {
-                    $("#register_province").append(
-                        `<option value="${province.province_code}">${province.province_description}</option>`
-                    );
-                });
-    
-                spinner.hide();
-            },
-            error: function (_, textStatus, error) {
-                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
-            }
-        });
-    })
-    
-    $("#register_province").change(function () {
-        const provinceCode = $(this).val();
-        const spinner = $("#register_province").next(".spinner-border");
-    
-        spinner.removeClass("d-none").show();
-    
-        const formData = new FormData();
-        formData.append('province_code', provinceCode);
-        formData.append('action', 'get_cities');
-    
-        $.ajax({
-            url: 'server',
-            data: formData,
-            type: 'POST',
-            dataType: 'JSON',
-            processData: false,
-            contentType: false,
-            timeout: 10000,
-            success: function (response) {
-                const cities = response.message;
-    
-                $("#register_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
-    
-                $("#register_city_municipality").removeAttr("disabled").empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
-                
-                cities.forEach(city => {
-                    $("#register_city_municipality").append(
-                        `<option value="${city.city_municipality_code}">${city.city_municipality_description}</option>`
-                    );
-                });
-    
-                spinner.hide();
-            },
-            error: function (_, textStatus, error) {
-                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
-            }
-        });
-    })
-    
-    $("#register_city_municipality").change(function () {
-        const cityMunicipalityCode = $(this).val();
-        const spinner = $("#register_city_municipality").next(".spinner-border");
-    
-        spinner.removeClass("d-none").show();
-    
-        const formData = new FormData();
-        formData.append('city_municipality_code', cityMunicipalityCode);
-        formData.append('action', 'get_barangays');
-    
-        $.ajax({
-            url: 'server',
-            data: formData,
-            type: 'POST',
-            dataType: 'JSON',
-            processData: false,
-            contentType: false,
-            timeout: 10000,
-            success: function (response) {
-                const barangays = response.message;
-    
-                $("#register_barangay").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Barangay --</option>');
-                
-                barangays.forEach(barangay => {
-                    $("#register_barangay").append(
-                        `<option value="${barangay.id}">${barangay.barangay_description}</option>`
-                    );
-                });
-    
+
                 spinner.hide();
             },
             error: function (_, textStatus, error) {
@@ -1314,9 +1123,208 @@ jQuery(document).ready(function () {
         });
     })
 
+    $("#profile_province").change(function () {
+        const provinceCode = $(this).val();
+        const spinner = $("#profile_province").next(".spinner-border");
+
+        spinner.removeClass("d-none").show();
+
+        const formData = new FormData();
+        formData.append('province_code', provinceCode);
+        formData.append('action', 'get_cities');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const cities = response.message;
+
+                $("#profile_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
+
+                $("#profile_city_municipality").removeAttr("disabled").empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
+
+                cities.forEach(city => {
+                    $("#profile_city_municipality").append(
+                        `<option value="${city.city_municipality_code}">${city.city_municipality_description}</option>`
+                    );
+                });
+
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+
+    $("#profile_city_municipality").change(function () {
+        const cityMunicipalityCode = $(this).val();
+        const spinner = $("#profile_city_municipality").next(".spinner-border");
+
+        spinner.removeClass("d-none").show();
+
+        const formData = new FormData();
+        formData.append('city_municipality_code', cityMunicipalityCode);
+        formData.append('action', 'get_barangays');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const barangays = response.message;
+
+                $("#profile_barangay").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Barangay --</option>');
+                barangays.forEach(barangay => {
+                    $("#profile_barangay").append(
+                        `<option value="${barangay.id}">${barangay.barangay_description}</option>`
+                    );
+                });
+
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+
+    $("#register_region").change(function () {
+        const regionCode = $(this).val();
+        const spinner = $("#register_region").next(".spinner-border");
+
+        spinner.removeClass("d-none").show();
+
+        const formData = new FormData();
+        formData.append('region_code', regionCode);
+        formData.append('action', 'get_provinces');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const provinces = response.message;
+
+                $("#register_city_municipality").attr("disabled", true).empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
+                $("#register_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
+
+                $("#register_province").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Province --</option>');
+
+                provinces.forEach(province => {
+                    $("#register_province").append(
+                        `<option value="${province.province_code}">${province.province_description}</option>`
+                    );
+                });
+
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+
+    $("#register_province").change(function () {
+        const provinceCode = $(this).val();
+        const spinner = $("#register_province").next(".spinner-border");
+
+        spinner.removeClass("d-none").show();
+
+        const formData = new FormData();
+        formData.append('province_code', provinceCode);
+        formData.append('action', 'get_cities');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const cities = response.message;
+
+                $("#register_barangay").attr("disabled", true).empty().append('<option value selected disabled>-- Select Barangay --</option>');
+
+                $("#register_city_municipality").removeAttr("disabled").empty().append('<option value selected disabled>-- Select City/Municipality --</option>');
+
+                cities.forEach(city => {
+                    $("#register_city_municipality").append(
+                        `<option value="${city.city_municipality_code}">${city.city_municipality_description}</option>`
+                    );
+                });
+
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+
+    $("#register_city_municipality").change(function () {
+        const cityMunicipalityCode = $(this).val();
+        const spinner = $("#register_city_municipality").next(".spinner-border");
+
+        spinner.removeClass("d-none").show();
+
+        const formData = new FormData();
+        formData.append('city_municipality_code', cityMunicipalityCode);
+        formData.append('action', 'get_barangays');
+
+        $.ajax({
+            url: 'server',
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            timeout: 10000,
+            success: function (response) {
+                const barangays = response.message;
+
+                $("#register_barangay").removeAttr("disabled").empty().append('<option value selected disabled>-- Select Barangay --</option>');
+
+                barangays.forEach(barangay => {
+                    $("#register_barangay").append(
+                        `<option value="${barangay.id}">${barangay.barangay_description}</option>`
+                    );
+                });
+
+                spinner.hide();
+            },
+            error: function (_, textStatus, error) {
+                handleAjaxError(spinner, textStatus === "timeout" ? "Request timed out. Please check your internet connection." : error);
+            }
+        });
+    })
+
+    $("#order_tracking_form").submit(function () {
+        const tracking_number = $("#order_tracking_tracking_number").val();
+
+        $("#order_tracking_submit").attr("disabled", true);
+
+        location.href = "order_tracking?tracking_number=" + tracking_number;
+    })
+
     function handleAjaxError(spinner, errorMessage = "An error occurred. Please try again.") {
         console.error(errorMessage);
-        
+
         Swal.fire({
             title: "Don't worry!",
             text: "This is an error probobly due to your internet connection. Just try again.",
